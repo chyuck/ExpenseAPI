@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseAPI.RESTAPI", "ExpenseAPI.RESTAPI\ExpenseAPI.RESTAPI.csproj", "{5C839927-93E9-4602-9D6D-FEEEE6008F90}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseAPI.RESTAPI", "ExpenseAPI.RESTAPI\ExpenseAPI.RESTAPI.csproj", "{BBD9FF1C-8EC8-4C7A-B90F-97A7B969CAD2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5C839927-93E9-4602-9D6D-FEEEE6008F90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C839927-93E9-4602-9D6D-FEEEE6008F90}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C839927-93E9-4602-9D6D-FEEEE6008F90}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C839927-93E9-4602-9D6D-FEEEE6008F90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBD9FF1C-8EC8-4C7A-B90F-97A7B969CAD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBD9FF1C-8EC8-4C7A-B90F-97A7B969CAD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBD9FF1C-8EC8-4C7A-B90F-97A7B969CAD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBD9FF1C-8EC8-4C7A-B90F-97A7B969CAD2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
