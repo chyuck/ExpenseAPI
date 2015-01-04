@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DIContainer</name>
+    </assembly>
+    <members>
+        <member name="T:DIContainer.Attributes.InjectAttribute">
+            <summary>
+            Attribute that can be used on constructor with arguments or on property with setter.
+            - For constructor it tells that DI container will use this constructor to create an instance of a type and arguments will be taken from DI container.
+            - For property it tells to set the value of property from IoC container right after creating of a new instance of a type.
+            </summary>
+        </member>
+        <member name="T:DIContainer.IContainer">
+            <summary>DI container</summary>
+        </member>
+        <member name="T:DIContainer.IReadOnlyContainer">
+            <summary>Readonly DI container</summary>
+        </member>
+        <member name="M:DIContainer.IReadOnlyContainer.Get``1(System.Object[])">
+            <summary>Returns an instance of registered <see cref="!:TKey"/> type from DI container</summary>
+            <exception cref="T:DIContainer.Exceptions.ContainerException">If <see cref="T:DIContainer.Exceptions.ContainerException"/> type is not registered</exception>
+            <exception cref="T:System.ArgumentException">If <see cref="!:unknownInstances"/> has more than one instance of the same type</exception>
+        </member>
+        <member name="M:DIContainer.IReadOnlyContainer.Get(System.Type,System.Object[])">
+            <summary>Returns an instance of registered <see cref="!:keyType"/> type from DI container</summary>
+            <exception cref="T:System.ArgumentNullException">If <see cref="!:keyType"/> is null</exception>
+            <exception cref="T:DIContainer.Exceptions.ContainerException">If <see cref="!:keyType"/> type is not registered</exception> 
+            <exception cref="T:System.ArgumentException">If <see cref="!:unknownInstances"/> has more than one instance of the same type</exception>
+        </member>
+        <member name="M:DIContainer.IReadOnlyContainer.Contains``1">
+            <summary>Checks whether <see cref="!:TKey"/> is registered in DI container</summary>
+        </member>
+        <member name="M:DIContainer.IReadOnlyContainer.Contains(System.Type)">
+            <summary>Checks whether <see cref="!:keyType"/> is registered in DI container</summary>
+            <exception cref="T:System.ArgumentNullException">If <see cref="!:keyType"/> is null</exception>
+        </member>
+        <member name="M:DIContainer.IReadOnlyContainer.ContainsInstance``1">
+            <summary>Checks whether DI container holds an instance of <see cref="!:TKey"/></summary>
+            <exception cref="T:DIContainer.Exceptions.ContainerException">If <see cref="!:TKey"/> is not registered in DI container</exception>
+        </member>
+        <member name="M:DIContainer.IReadOnlyContainer.ContainsInstance(System.Type)">
+            <summary>Checks whether DI container holds an instance of <see cref="!:keyType"/></summary>
+            <exception cref="T:System.ArgumentNullException">If <see cref="!:keyType"/> is null</exception>
+            <exception cref="T:DIContainer.Exceptions.ContainerException">If <see cref="!:keyType"/> is not registered in DI container</exception>
+        </member>
+        <member name="M:DIContainer.IReadOnlyContainer.CreateInstance``1(System.Object[])">
+            <summary>Create an instance of <see cref="!:T"/> type and injects registered types</summary>
+            <exception cref="T:DIContainer.Exceptions.ContainerException">If there is ambiguous usage of <see cref="T:DIContainer.Attributes.InjectAttribute"/> attribute on constructors</exception>
+            <exception cref="T:DIContainer.Exceptions.ContainerException">If injected type is not registered in DI container and it is not in <see cref="!:unknownInstances"/></exception>
+            <exception cref="T:System.ArgumentException">If <see cref="!:unknownInstances"/> has more than one instance of the same type</exception>
+        </member>
+        <member name="M:DIContainer.IReadOnlyContainer.CreateInstance(System.Type,System.Object[])">
+            <summary>Creates an instance of <see cref="!:type"/> type and injects types</summary>
+            <exception cref="T:System.ArgumentNullException">If <see cref="!:type"/> is null</exception> 
+            <exception cref="T:DIContainer.Exceptions.ContainerException">If there is ambiguous usage of <see cref="T:DIContainer.Attributes.InjectAttribute"/> attribute on constructors</exception>
+            <exception cref="T:DIContainer.Exceptions.ContainerException">If injected type is not registered in DI container and it is not in <see cref="!:unknownInstances"/></exception>
+            <exception cref="T:System.ArgumentException">If <see cref="!:unknownInstances"/> has more than one instance of the same type</exception>
+        </member>
+        <member name="P:DIContainer.IReadOnlyContainer.All">
+            <summary>Returns all types registered in DI container</summary>
+        </member>
+        <member name="P:DIContainer.IReadOnlyContainer.AllInstances">
+            <summary>Returns all instances of registered types that DI container holds</summary>
+        </member>
+        <member name="P:DIContainer.IReadOnlyContainer.SyncRoot">
+            <summary>The root which is used for syncronization of threads</summary>
+        </member>
+        <member name="M:DIContainer.IContainer.RegisterImplementation``2(DIContainer.Lifetime)">
+            <summary>Registers <see cref="!:TImplementation"/> type as implementation of <see cref="!:TKey"/></summary>
+            <typeparam name="TKey">Registration key type</typeparam>
+            <typeparam name="TImplementation">Implementation type of key type</typeparam>
+            <param name="lifetime">Lifetime of object in DI container</param>
+            <exception cref="T:DIContainer.Exceptions.ContainerException">If <see cref="!:TKey"/> type is already registered</exception>
+        </member>
+        <member name="M:DIContainer.IContainer.RegisterImplementation(System.Type,System.Type,DIContainer.Lifetime)">
+            <summary>Registers <see cref="!:implementationType"/> type as implementation of <see cref="!:keyType"/></summary>
+            <param name="keyType">Registration key type</param>
+            <param name="implementationType">Implementation type of key type</param>
+            <param name="lifetime">Lifetime of object in DI container</param>
+            <exception cref="T:System.ArgumentNullException">if <see cref="!:keyType"/> is null</exception>
+            <exception cref="T:System.ArgumentNullException">if <see cref="!:implementationType"/> is null</exception>
+            <exception cref="T:DIContainer.Exceptions.ContainerException">If <see cref="!:keyType"/> type is already registered</exception>
+        </member>
+        <member name="M:DIContainer.IContainer.RegisterInstance``1(``0)">
+            <summary>Registers object of <see cref="!:TKey"/> type</summary>
+            <typeparam name="TKey">Registration key type</typeparam>
+            <param name="instance">Object of <see cref="!:TKey"/> type</param>
+            <remarks>This method registers <see cref="!:TKey"/> type with <see cref="F:DIContainer.Lifetime.PerContainer"/> lifetime</remarks>
+            <exception cref="T:DIContainer.Exceptions.ContainerException">If <see cref="!:TKey"/> type is already registered</exception>
+        </member>
+        <member name="M:DIContainer.IContainer.RegisterInstance(System.Type,System.Object)">
+            <summary>Registers object of any type which is implementation of <see cref="!:keyType"/></summary>
+            <param name="keyType">Registration key type</param>
+            <param name="instance">Object of a type which is implementation of <see cref="!:keyType"/> type</param>
+            <remarks>This method registers <see cref="!:instance"/> object as an implementation of <see cref="!:keyType"/> with <see cref="F:DIContainer.Lifetime.PerContainer"/> lifetime</remarks>
+            <exception cref="T:System.ArgumentNullException">if <see cref="!:keyType"/> is null</exception>
+            <exception cref="T:System.ArgumentNullException">if <see cref="!:instance"/> is null</exception>
+            <exception cref="T:DIContainer.Exceptions.ContainerException">If type of <see cref="!:instance"/> is not derived from <see cref="!:keyType"/> type</exception>
+            <exception cref="T:DIContainer.Exceptions.ContainerException">If <see cref="!:keyType"/> type is already registered</exception>
+        </member>
+        <member name="M:DIContainer.IContainer.Remove``1">
+            <summary>Removes registration of <see cref="!:TKey"/> type from DI container</summary>
+            <typeparam name="TKey">Registration key type</typeparam>
+            <exception cref="T:DIContainer.Exceptions.ContainerException">If <see cref="!:TKey"/> type is not registered in DI container</exception>
+        </member>
+        <member name="M:DIContainer.IContainer.Remove(System.Type)">
+            <summary>Removes registration of <see cref="!:keyType"/> type from DI container</summary>
+            <param name="keyType">Registration key type</param>
+            <exception cref="T:System.ArgumentNullException">if <see cref="!:keyType"/> is null</exception>
+            <exception cref="T:DIContainer.Exceptions.ContainerException">If <see cref="!:keyType"/> type is not registered in DI container</exception>
+        </member>
+        <member name="M:DIContainer.IContainer.ClearAll">
+            <summary>Removes all registrations from DI container</summary>
+            <remarks>It does not remove registrations for <see cref="T:DIContainer.IReadOnlyContainer"/> and <see cref="T:DIContainer.IContainer"/></remarks>
+        </member>
+        <member name="M:DIContainer.IContainer.RemoveInstance``1">
+            <summary>Remove instance of <see cref="!:TKey"/> from DI container</summary>
+            <exception cref="T:DIContainer.Exceptions.ContainerException">If <see cref="!:TKey"/> type is not registered in DI container</exception>
+            <exception cref="T:DIContainer.Exceptions.ContainerException">If DI container doesn't contain an instance of <see cref="!:TKey"/> type</exception>
+        </member>
+        <member name="M:DIContainer.IContainer.RemoveInstance(System.Type)">
+            <summary>Remove instance of <see cref="!:keyType"/> from DI container</summary>
+            <exception cref="T:System.ArgumentNullException">if <see cref="!:keyType"/> is null</exception>
+            <exception cref="T:DIContainer.Exceptions.ContainerException">If <see cref="!:keyType"/> type is not registered in DI container</exception>
+            <exception cref="T:DIContainer.Exceptions.ContainerException">If DI container doesn't contain an instance of <see cref="!:keyType"/> type</exception>
+        </member>
+        <member name="M:DIContainer.IContainer.ClearAllInstances">
+            <summary>Removes all instances that DI container holds</summary>
+        </member>
+        <member name="T:DIContainer.ContainerFactory">
+            <summary>DI container factory</summary>
+        </member>
+        <member name="M:DIContainer.ContainerFactory.Create">
+            <summary>Creates a new instance of DI Container</summary>
+        </member>
+        <member name="T:DIContainer.Exceptions.ContainerException">
+            <summary>DI container exception</summary>
+        </member>
+        <member name="T:DIContainer.Lifetime">
+            <summary>Determines lifetime of object in DI container.</summary>
+        </member>
+        <member name="F:DIContainer.Lifetime.PerCall">
+            <summary>Every time instance of a type is requested from DI container - a new instance is returned.</summary>
+        </member>
+        <member name="F:DIContainer.Lifetime.PerContainer">
+            <summary>Every time instance of a type is requested from DI container - the same instance is returned.</summary>
+        </member>
+    </members>
+</doc>

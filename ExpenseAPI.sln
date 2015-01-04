@@ -10,6 +10,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Properties", "Properties", 
 		Properties\SolutionInfo.cs = Properties\SolutionInfo.cs
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Git", "Git", "{AB179BD7-B232-4151-AD0D-77DC85F1B852}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseAPI.BusinessLogic", "ExpenseAPI.BusinessLogic\ExpenseAPI.BusinessLogic.csproj", "{3B0638B8-ED3C-49BB-AB3F-DD1740B15F8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseAPI.Common", "ExpenseAPI.Common\ExpenseAPI.Common.csproj", "{D6671140-0252-45BA-8873-A023CA42FC56}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +31,14 @@ Global
 		{BBD9FF1C-8EC8-4C7A-B90F-97A7B969CAD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBD9FF1C-8EC8-4C7A-B90F-97A7B969CAD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBD9FF1C-8EC8-4C7A-B90F-97A7B969CAD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B0638B8-ED3C-49BB-AB3F-DD1740B15F8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B0638B8-ED3C-49BB-AB3F-DD1740B15F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B0638B8-ED3C-49BB-AB3F-DD1740B15F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B0638B8-ED3C-49BB-AB3F-DD1740B15F8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6671140-0252-45BA-8873-A023CA42FC56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6671140-0252-45BA-8873-A023CA42FC56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6671140-0252-45BA-8873-A023CA42FC56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6671140-0252-45BA-8873-A023CA42FC56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
