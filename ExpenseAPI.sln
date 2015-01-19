@@ -23,6 +23,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseAPI.Common", "Expens
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseAPI.Models", "ExpenseAPI.Models\ExpenseAPI.Models.csproj", "{8AC9E6AB-D3F3-4459-B63D-6D55276DD11B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{A8DAF846-DB5B-4FBB-BB0A-B2D1B7B7C7E3}"
+	ProjectSection(SolutionItems) = preProject
+		Database\CreateDatabase.sql = Database\CreateDatabase.sql
+		Database\CreateInitialData.sql = Database\CreateInitialData.sql
+		Database\Install.bat = Database\Install.bat
+		Database\Install.sql = Database\Install.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

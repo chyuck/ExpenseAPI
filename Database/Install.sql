@@ -9,6 +9,7 @@ GO
 IF DB_ID(N'ExpenseAPI') IS NOT NULL
 BEGIN
 	DROP DATABASE [ExpenseAPI]
+	DROP LOGIN [expense_api]
 	PRINT CAST(SYSDATETIME() AS NVARCHAR) + N' - Database was dropped'
 END
 GO
