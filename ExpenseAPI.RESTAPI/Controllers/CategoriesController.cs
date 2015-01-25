@@ -12,7 +12,12 @@ namespace ExpenseAPI.RESTAPI.Controllers
         [Route("")]
         public IEnumerable<CategoryGet> GetCategories()
         {
-            throw new NotImplementedException();
+            return
+                new[]
+                {
+                    new CategoryGet { Name = "Category 1" },
+                    new CategoryGet { Name = "Category 2" }
+                };
         }
 
         [HttpGet]
