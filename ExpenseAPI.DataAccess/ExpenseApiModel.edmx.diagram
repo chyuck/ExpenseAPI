@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="80be85ac64a74edaac45cb3f1608cddd" Name="Diagram">
+        <EntityTypeShape EntityType="ExpenseAPIModel.Category" Width="1.5" PointX="1" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="ExpenseAPIModel.Transaction" Width="1.5" PointX="4.375" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ExpenseAPIModel.User" Width="1.5" PointX="1" PointY="0.5" IsExpanded="true" />
+        <AssociationConnector Association="ExpenseAPIModel.FK_Category_User" ManuallyRouted="false" />
+        <AssociationConnector Association="ExpenseAPIModel.FK_Transaction_Category" ManuallyRouted="false" />
+        <AssociationConnector Association="ExpenseAPIModel.FK_Transaction_User" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Web.Http;
 using ExpenseAPI.Models.Category;
+using Microsoft.WindowsAzure.Mobile.Service.Security;
 
 namespace ExpenseAPI.RESTAPI.Controllers
 {
     [RoutePrefix("api/categories")]
+    [AuthorizeLevel(AuthorizationLevel.User)]
     public class CategoriesController : ApiController
     {
         [HttpGet]
         [Route("")]
+        
         public IEnumerable<CategoryGet> GetCategories()
         {
             return

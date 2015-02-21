@@ -172,9 +172,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Performance\Microsoft.ServiceBus.MessagingPerformanceCounters.man" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -201,7 +198,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>64781</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:2337/</IISUrl>
+          <IISUrl>http://localhost:64781/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

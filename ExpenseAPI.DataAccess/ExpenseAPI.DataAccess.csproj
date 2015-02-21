@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DIContainer">
+      <HintPath>..\packages\DIContainer.1.0.0\lib\NET40\DIContainer.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -39,6 +42,8 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,13 +54,70 @@
     <Compile Include="..\Properties\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="Category.cs">
+      <DependentUpon>ExpenseApiModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DIContainerRegistrator.cs" />
+    <Compile Include="ExpenseApiModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExpenseApiModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ExpenseApiModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExpenseApiModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ExpenseApiModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExpenseApiModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Category.cs" />
+    <Compile Include="Model\ExpenseAPIEntities.cs" />
+    <Compile Include="Model\IEntity.cs" />
+    <Compile Include="Model\IPersistentService.cs" />
+    <Compile Include="Model\Transaction.cs" />
+    <Compile Include="Model\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Transaction.cs">
+      <DependentUpon>ExpenseApiModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="User.cs">
+      <DependentUpon>ExpenseApiModel.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <EntityDeploy Include="ExpenseApiModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ExpenseApiModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="ExpenseApiModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ExpenseApiModel.edmx</DependentUpon>
+      <LastGenOutput>ExpenseApiModel.Context.cs</LastGenOutput>
+    </None>
+    <None Include="ExpenseApiModel.edmx.diagram">
+      <DependentUpon>ExpenseApiModel.edmx</DependentUpon>
+    </None>
+    <None Include="ExpenseApiModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ExpenseApiModel.edmx</DependentUpon>
+      <LastGenOutput>ExpenseApiModel.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExpenseAPI.Common\ExpenseAPI.Common.csproj">
+      <Project>{D6671140-0252-45BA-8873-A023CA42FC56}</Project>
+      <Name>ExpenseAPI.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
