@@ -50,7 +50,10 @@
     <Compile Include="Category\CategoryPost.cs" />
     <Compile Include="Category\CategoryPut.cs" />
     <Compile Include="Category\CategoryType.cs" />
+    <Compile Include="Common\Error.cs" />
+    <Compile Include="Common\Information.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="User\UserGet.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

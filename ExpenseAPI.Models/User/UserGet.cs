@@ -2,13 +2,10 @@
 
 namespace ExpenseAPI.Models
 {
-    [DataContract(Name = "category")]
-    public class CategoryGet
+    [DataContract(Name = "user")]
+    public class UserGet
     {
         [DataMember(Name = "name")]
         public string Name { get; set; }
-
-        [DataMember(Name = "type")]
-        public string Type { get; set; }
     }
 }

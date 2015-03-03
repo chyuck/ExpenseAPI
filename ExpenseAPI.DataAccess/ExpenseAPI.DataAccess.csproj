@@ -76,7 +76,7 @@
     <Compile Include="Model\Category.cs" />
     <Compile Include="Model\ExpenseAPIEntities.cs" />
     <Compile Include="Model\IEntity.cs" />
-    <Compile Include="Model\IPersistentService.cs" />
+    <Compile Include="Model\IPersistenceService.cs" />
     <Compile Include="Model\Transaction.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

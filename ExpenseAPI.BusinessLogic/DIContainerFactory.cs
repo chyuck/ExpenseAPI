@@ -1,5 +1,6 @@
 ﻿using DIContainer;
 using ExpenseAPI.Common.Helpers;
+using Validator;
 
 namespace ExpenseAPI.BusinessLogic
 {
@@ -9,6 +10,9 @@ namespace ExpenseAPI.BusinessLogic
         {
             var container = ContainerFactory.Create();
 
+            Common.DIContainerRegistrator.Register(container);
+            DataAccess.DIContainerRegistrator.Register(container);
+            
             RegisterDependencies(container);
 
             return container;
@@ -18,8 +22,10 @@ namespace ExpenseAPI.BusinessLogic
         {
             Checker.ArgumentIsNull(container, "container");
 
-            // Add DI container dependencies below
-        }
+            container.RegisterImplementation<IValidator, Validator.Validator>(Lifetime.PerContainer);
 
+            container.RegisterImplementation<IUserService, UserService>(Lifetime.PerContainer);
+            container.RegisterImplementation<ICategoryService, CategoryService>(Lifetime.PerContainer);
+        }
     }
 }

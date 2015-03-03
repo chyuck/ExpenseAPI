@@ -1,53 +1,80 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Net.Http;
 using System.Web.Http;
-using ExpenseAPI.Models.Category;
+using ExpenseAPI.BusinessLogic;
+using ExpenseAPI.Models;
 using Microsoft.WindowsAzure.Mobile.Service.Security;
 
 namespace ExpenseAPI.RESTAPI.Controllers
 {
-    [RoutePrefix("api/categories")]
     [AuthorizeLevel(AuthorizationLevel.User)]
-    public class CategoriesController : ApiController
+    [RoutePrefix("categories")]
+    public class CategoriesController : BaseController
     {
         [HttpGet]
         [Route("")]
-        
-        public IEnumerable<CategoryGet> GetCategories()
+        public HttpResponseMessage GetCategories()
         {
-            return
-                new[]
-                {
-                    new CategoryGet { Name = "Category 1" },
-                    new CategoryGet { Name = "Category 2" }
-                };
+            return Execute(() =>
+            {
+                var categoryService = Container.Get<ICategoryService>();
+
+                return categoryService.GetCategories();
+            });
         }
 
         [HttpGet]
         [Route("{name}")]
-        public CategoryGet GetCategory(string name)
+        public HttpResponseMessage GetCategory([FromUri]string name)
         {
-            throw new NotImplementedException();
+            return Execute(() =>
+            {
+                var categoryService = Container.Get<ICategoryService>();
+
+                return categoryService.GetCategory(name);
+            });
         }
 
         [HttpPost]
-        public void AddCategory([FromBody]CategoryPost category)
+        [Route("")]
+        public HttpResponseMessage CreateCategory([FromBody]CategoryPost category)
         {
-            throw new NotImplementedException();
+            return Execute(() =>
+            {
+                var categoryService = Container.Get<ICategoryService>();
+
+                categoryService.CreateCategory(category);
+
+                return new Information { Message = "Category created." };
+            });
         }
 
         [HttpPut]
+        [HttpPatch]
         [Route("{name}")]
-        public void UpdateCategory(string name, [FromBody]CategoryPut category)
+        public HttpResponseMessage UpdateCategory([FromUri]string name, [FromBody]CategoryPut category)
         {
-            throw new NotImplementedException();
+            return Execute(() =>
+            {
+                var categoryService = Container.Get<ICategoryService>();
+
+                categoryService.UpdateCategory(name, category);
+
+                return new Information { Message = "Category updated." };
+            });
         }
 
         [HttpDelete]
         [Route("{name}")]
-        public void DeleteCategory(string name)
+        public HttpResponseMessage DeleteCategory([FromUri]string name)
         {
-            throw new NotImplementedException();
+            return Execute(() =>
+            {
+                var categoryService = Container.Get<ICategoryService>();
+
+                categoryService.DeleteCategory(name);
+
+                return new Information { Message = "Category deleted." };
+            });
         }
     }
 }

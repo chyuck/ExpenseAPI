@@ -1,7 +1,7 @@
 ﻿using DIContainer;
 using ExpenseAPI.Common.Helpers;
 
-namespace ExpenseAPI.DataAccess
+namespace ExpenseAPI.Common
 {
     public static class DIContainerRegistrator
     {
@@ -9,7 +9,7 @@ namespace ExpenseAPI.DataAccess
         {
             Checker.ArgumentIsNull(container, "container");
 
-            container.RegisterImplementation<IPersistenceService, ExpenseAPIEntities>(Lifetime.PerCall);
+            container.RegisterImplementation<ITimeService, TimeService>(Lifetime.PerContainer);
         }
     }
 }

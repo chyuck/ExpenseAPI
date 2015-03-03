@@ -33,20 +33,38 @@
     <Reference Include="DIContainer">
       <HintPath>..\packages\DIContainer.1.0.0\lib\NET40\DIContainer.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Validator">
+      <HintPath>..\packages\Validator.1.0.0\lib\NET40\Validator.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Properties\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="BaseBusinessLogicService.cs" />
+    <Compile Include="Category\CategoryService.cs" />
+    <Compile Include="Category\CategoryServiceException.cs" />
+    <Compile Include="Category\ICategoryService.cs" />
     <Compile Include="DIContainerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="User\IUserService.cs" />
+    <Compile Include="User\UserService.cs" />
+    <Compile Include="User\UserServiceException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -56,7 +74,16 @@
       <Project>{D6671140-0252-45BA-8873-A023CA42FC56}</Project>
       <Name>ExpenseAPI.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ExpenseAPI.DataAccess\ExpenseAPI.DataAccess.csproj">
+      <Project>{B6F43158-49B3-45DD-AD29-D31ADC7E3C5E}</Project>
+      <Name>ExpenseAPI.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExpenseAPI.Models\ExpenseAPI.Models.csproj">
+      <Project>{8ac9e6ab-d3f3-4459-b63d-6d55276dd11b}</Project>
+      <Name>ExpenseAPI.Models</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

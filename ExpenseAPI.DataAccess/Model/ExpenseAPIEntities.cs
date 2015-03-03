@@ -2,7 +2,7 @@
 
 namespace ExpenseAPI.DataAccess
 {
-    internal partial class ExpenseAPIEntities : IPersistentService
+    internal partial class ExpenseAPIEntities : IPersistenceService
     {
         public IDbSet<TEntity> GetEntitySet<TEntity>() 
             where TEntity : class, IEntity, new()

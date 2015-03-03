@@ -1,14 +1,8 @@
-﻿using System.Runtime.Serialization;
-
-namespace ExpenseAPI.Models.Category
+﻿namespace ExpenseAPI.Models
 {
-    [DataContract]
     public enum CategoryType
     {
-        [EnumMember]
         Income,
-
-        [EnumMember]
         Expense
     }
 }

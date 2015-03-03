@@ -40,7 +40,7 @@ CREATE TABLE [dbo].[Category]
 	[CreateDate] [datetime2](7) NOT NULL,
 	[ChangeDate] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_Category] PRIMARY KEY CLUSTERED ([CategoryId]),
- CONSTRAINT [UK_Category] UNIQUE NONCLUSTERED ([Name]),
+ CONSTRAINT [UK_Category] UNIQUE NONCLUSTERED ([UserId], [Name]),
  CONSTRAINT [CK_Type] CHECK ([Type] IN ('Income', 'Expense'))
 )
 GO
