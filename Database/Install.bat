@@ -1,1 +1,1 @@
-sqlcmd -f 1251 -S .\SQLEXPRESS -i Install.sql -o Install.log
+sqlcmd -f 1251 -S . -i Install.sql -o Install.log
