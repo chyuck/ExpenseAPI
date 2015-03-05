@@ -17,12 +17,11 @@ namespace ExpenseAPI.DataAccess
         public long Id { get; set; }
         public int CategoryId { get; set; }
         public decimal USD { get; set; }
-        public int UserId { get; set; }
         public string Comment { get; set; }
         public System.DateTime CreateDate { get; set; }
         public System.DateTime ChangeDate { get; set; }
+        public System.DateTime Time { get; set; }
     
         public virtual Category Category { get; set; }
-        public virtual User User { get; set; }
     }
 }

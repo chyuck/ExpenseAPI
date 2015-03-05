@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ExpenseAPIModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ExpenseAPIModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="CategoryId" />
@@ -23,8 +23,8 @@
           <Property Name="TransactionId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CategoryId" Type="int" Nullable="false" />
           <Property Name="USD" Type="money" Nullable="false" />
-          <Property Name="UserId" Type="int" Nullable="false" />
           <Property Name="Comment" Type="nvarchar" MaxLength="100" />
+          <Property Name="Time" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="ChangeDate" Type="datetime2" Precision="7" Nullable="false" />
         </EntityType>
@@ -34,6 +34,7 @@
           </Key>
           <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
         </EntityType>
         <Association Name="FK_Category_User">
           <End Role="User" Type="Self.User" Multiplicity="1" />
@@ -59,18 +60,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Transaction_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Transaction" Type="Self.Transaction" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Transaction">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="ExpenseAPIModelStoreContainer">
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Transaction" EntityType="Self.Transaction" Schema="dbo" store:Type="Tables" />
@@ -83,13 +72,8 @@
             <End Role="Category" EntitySet="Category" />
             <End Role="Transaction" EntitySet="Transaction" />
           </AssociationSet>
-          <AssociationSet Name="FK_Transaction_User" Association="Self.FK_Transaction_User">
-            <End Role="User" EntitySet="User" />
-            <End Role="Transaction" EntitySet="Transaction" />
-          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ExpenseAPIModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -113,12 +97,11 @@
           <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CategoryId" Type="Int32" Nullable="false" />
           <Property Name="USD" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
           <Property Name="Comment" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="ChangeDate" Type="DateTime" Nullable="false" Precision="7" />
           <NavigationProperty Name="Category" Relationship="Self.FK_Transaction_Category" FromRole="Transaction" ToRole="Category" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Transaction_User" FromRole="Transaction" ToRole="User" />
+          <Property Name="Time" Type="DateTime" Nullable="false" Precision="7" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -127,7 +110,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Categories" Relationship="Self.FK_Category_User" FromRole="User" ToRole="Category" />
-          <NavigationProperty Name="Transactions" Relationship="Self.FK_Transaction_User" FromRole="User" ToRole="Transaction" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
         </EntityType>
         <Association Name="FK_Category_User">
           <End Role="User" Type="Self.User" Multiplicity="1" />
@@ -153,18 +136,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Transaction_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Transaction" Type="Self.Transaction" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Transaction">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="ExpenseAPIEntities" annotation:LazyLoadingEnabled="true" a:TypeAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration">
           <EntitySet Name="Category" EntityType="Self.Category" />
           <EntitySet Name="Transaction" EntityType="Self.Transaction" />
@@ -175,10 +146,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_Transaction_Category" Association="Self.FK_Transaction_Category">
             <End Role="Category" EntitySet="Category" />
-            <End Role="Transaction" EntitySet="Transaction" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Transaction_User" Association="Self.FK_Transaction_User">
-            <End Role="User" EntitySet="User" />
             <End Role="Transaction" EntitySet="Transaction" />
           </AssociationSet>
         </EntityContainer>
@@ -203,10 +170,10 @@
           <EntitySetMapping Name="Transaction">
             <EntityTypeMapping TypeName="ExpenseAPIModel.Transaction">
               <MappingFragment StoreEntitySet="Transaction">
+                <ScalarProperty Name="Time" ColumnName="Time" />
                 <ScalarProperty Name="Id" ColumnName="TransactionId" />
                 <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
                 <ScalarProperty Name="USD" ColumnName="USD" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Comment" ColumnName="Comment" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="ChangeDate" ColumnName="ChangeDate" />
@@ -216,6 +183,7 @@
           <EntitySetMapping Name="User">
             <EntityTypeMapping TypeName="ExpenseAPIModel.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="Id" ColumnName="UserId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>

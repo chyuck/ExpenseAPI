@@ -2,7 +2,6 @@
 using System.Linq;
 using DIContainer;
 using DIContainer.Attributes;
-using ExpenseAPI.Common.Helpers;
 using ExpenseAPI.DataAccess;
 using ExpenseAPI.Models;
 using Validator.Helpers;
@@ -112,6 +111,8 @@ namespace ExpenseAPI.BusinessLogic
         {
             ValidateUserName(name);
 
+            var utcNow = Time.UtcNow;
+
             RethrowUniqueKeyException(
                 "UK_User",
                 () => new UserServiceException("User '{0}' already exists.", name),
@@ -119,7 +120,12 @@ namespace ExpenseAPI.BusinessLogic
                 {
                     using (var persistence = Container.Get<IPersistenceService>())
                     {
-                        var user = new User {Name = name};
+                        var user = 
+                            new User
+                            {
+                                Name = name,
+                                CreateDate = utcNow
+                            };
 
                         persistence.GetEntitySet<User>().Add(user);
 
@@ -142,6 +148,7 @@ namespace ExpenseAPI.BusinessLogic
             {
                 return 
                     persistence.GetEntitySet<User>()
+                        .OrderBy(u => u.Name)
                         .Select(u => new UserGet { Name = u.Name })
                         .ToArray();
             }

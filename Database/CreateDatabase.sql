@@ -6,7 +6,10 @@ GO
 CREATE DATABASE [ExpenseAPI]
 GO
 
-CREATE LOGIN [expense_api] WITH PASSWORD=N'expenseapi', DEFAULT_DATABASE=[ExpenseAPI], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
+IF NOT EXISTS(SELECT * FROM sys.syslogins WHERE [loginname]='expense_api')
+BEGIN
+	CREATE LOGIN [expense_api] WITH PASSWORD=N'expenseapi', DEFAULT_DATABASE=[ExpenseAPI], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
+END
 GO
 
 USE [ExpenseAPI]
@@ -24,7 +27,8 @@ GO
 CREATE TABLE [dbo].[User]
 (
 	[UserId] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [nvarchar](20) NOT NULL
+	[Name] [nvarchar](20) NOT NULL,
+	[CreateDate] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED ([UserId]),
  CONSTRAINT [UK_User] UNIQUE NONCLUSTERED ([Name])
 )
@@ -56,17 +60,12 @@ CREATE TABLE [dbo].[Transaction]
 	[TransactionId] [bigint] IDENTITY(1,1) NOT NULL,
 	[CategoryId] [int] NOT NULL,
 	[USD] [money] NOT NULL,
-	[UserId] [int] NOT NULL,
 	[Comment] [nvarchar](100) NULL,
+	[Time] [datetime2](7) NOT NULL,
 	[CreateDate] [datetime2](7) NOT NULL,
 	[ChangeDate] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_Transaction] PRIMARY KEY CLUSTERED ([TransactionId])
 )
-GO
-
-ALTER TABLE [dbo].[Transaction] ADD CONSTRAINT [FK_Transaction_User] FOREIGN KEY([UserId]) REFERENCES [dbo].[User] ([UserId])
-GO
-CREATE NONCLUSTERED INDEX [IX_Transaction_User] ON [dbo].[Transaction] ([UserId])
 GO
 
 ALTER TABLE [dbo].[Transaction] ADD CONSTRAINT [FK_Transaction_Category] FOREIGN KEY([CategoryId]) REFERENCES [dbo].[Category] ([CategoryId])

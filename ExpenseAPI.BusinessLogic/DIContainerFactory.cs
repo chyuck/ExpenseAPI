@@ -26,6 +26,7 @@ namespace ExpenseAPI.BusinessLogic
 
             container.RegisterImplementation<IUserService, UserService>(Lifetime.PerContainer);
             container.RegisterImplementation<ICategoryService, CategoryService>(Lifetime.PerContainer);
+            container.RegisterImplementation<ITransactionService, TransactionService>(Lifetime.PerContainer);
         }
     }
 }

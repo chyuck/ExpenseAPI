@@ -17,13 +17,12 @@ namespace ExpenseAPI.DataAccess
         public User()
         {
             this.Categories = new HashSet<Category>();
-            this.Transactions = new HashSet<Transaction>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
+        public System.DateTime CreateDate { get; set; }
     
         public virtual ICollection<Category> Categories { get; set; }
-        public virtual ICollection<Transaction> Transactions { get; set; }
     }
 }
