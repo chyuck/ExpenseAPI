@@ -5,11 +5,11 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="80be85ac64a74edaac45cb3f1608cddd" Name="Diagram" ZoomLevel="94">
-        <EntityTypeShape EntityType="ExpenseAPIModel.Category" Width="1.5" PointX="1" PointY="3" IsExpanded="true" />
-        <EntityTypeShape EntityType="ExpenseAPIModel.Transaction" Width="1.5" PointX="4.375" PointY="1.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="ExpenseAPIModel.User" Width="1.5" PointX="1" PointY="0.5" IsExpanded="true" />
-        <AssociationConnector Association="ExpenseAPIModel.FK_Category_User" ManuallyRouted="false" />
-        <AssociationConnector Association="ExpenseAPIModel.FK_Transaction_Category" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="ExpenseAPIModel.Category" Width="1.5" PointX="2.875" PointY="0.5" />
+        <EntityTypeShape EntityType="ExpenseAPIModel.Transaction" Width="1.5" PointX="5.125" PointY="0.5" />
+        <EntityTypeShape EntityType="ExpenseAPIModel.User" Width="1.5" PointX="0.625" PointY="1" />
+        <AssociationConnector Association="ExpenseAPIModel.FK_Category_User" />
+        <AssociationConnector Association="ExpenseAPIModel.FK_Transaction_Category" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

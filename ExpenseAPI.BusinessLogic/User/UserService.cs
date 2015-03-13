@@ -45,7 +45,7 @@ namespace ExpenseAPI.BusinessLogic
                     if (_user == null)
                         throw new UserServiceException("User is not logged in.");
 
-                    return _user.Id;
+                    return _user.UserId;
                 }
             }
         }

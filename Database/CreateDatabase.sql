@@ -59,6 +59,7 @@ CREATE TABLE [dbo].[Transaction]
 (
 	[TransactionId] [bigint] IDENTITY(1,1) NOT NULL,
 	[CategoryId] [int] NOT NULL,
+	[Id] [uniqueidentifier] NOT NULL,
 	[USD] [money] NOT NULL,
 	[Comment] [nvarchar](100) NULL,
 	[Time] [datetime2](7) NOT NULL,
@@ -71,4 +72,6 @@ GO
 ALTER TABLE [dbo].[Transaction] ADD CONSTRAINT [FK_Transaction_Category] FOREIGN KEY([CategoryId]) REFERENCES [dbo].[Category] ([CategoryId])
 GO
 CREATE NONCLUSTERED INDEX [IX_Transaction_Category] ON [dbo].[Transaction] ([CategoryId])
+GO
+CREATE NONCLUSTERED INDEX [IX_Transaction_Id] ON [dbo].[Transaction] ([Id])
 GO

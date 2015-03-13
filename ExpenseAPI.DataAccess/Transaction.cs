@@ -14,13 +14,14 @@ namespace ExpenseAPI.DataAccess
     
     public partial class Transaction
     {
-        public long Id { get; set; }
+        public long TransactionId { get; set; }
         public int CategoryId { get; set; }
+        public System.Guid Id { get; set; }
         public decimal USD { get; set; }
         public string Comment { get; set; }
+        public System.DateTime Time { get; set; }
         public System.DateTime CreateDate { get; set; }
         public System.DateTime ChangeDate { get; set; }
-        public System.DateTime Time { get; set; }
     
         public virtual Category Category { get; set; }
     }

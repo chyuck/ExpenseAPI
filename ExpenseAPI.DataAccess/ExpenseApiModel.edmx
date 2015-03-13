@@ -22,6 +22,7 @@
           </Key>
           <Property Name="TransactionId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CategoryId" Type="int" Nullable="false" />
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="USD" Type="money" Nullable="false" />
           <Property Name="Comment" Type="nvarchar" MaxLength="100" />
           <Property Name="Time" Type="datetime2" Precision="7" Nullable="false" />
@@ -77,47 +78,61 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ExpenseAPIModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="ExpenseAPIEntities" annotation:LazyLoadingEnabled="true" a:TypeAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration">
+          <EntitySet Name="Category" EntityType="ExpenseAPIModel.Category" />
+          <EntitySet Name="Transaction" EntityType="ExpenseAPIModel.Transaction" />
+          <EntitySet Name="User" EntityType="ExpenseAPIModel.User" />
+          <AssociationSet Name="FK_Category_User" Association="ExpenseAPIModel.FK_Category_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Category" EntitySet="Category" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transaction_Category" Association="ExpenseAPIModel.FK_Transaction_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Transaction" EntitySet="Transaction" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="Category">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="CategoryId" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="UserId" Type="Int32" Nullable="false" />
-          <Property Name="Type" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="ChangeDate" Type="DateTime" Nullable="false" Precision="7" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Category_User" FromRole="Category" ToRole="User" />
-          <NavigationProperty Name="Transactions" Relationship="Self.FK_Transaction_Category" FromRole="Category" ToRole="Transaction" />
+          <NavigationProperty Name="User" Relationship="ExpenseAPIModel.FK_Category_User" FromRole="Category" ToRole="User" />
+          <NavigationProperty Name="Transactions" Relationship="ExpenseAPIModel.FK_Transaction_Category" FromRole="Category" ToRole="Transaction" />
         </EntityType>
         <EntityType Name="Transaction">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="TransactionId" />
           </Key>
-          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TransactionId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CategoryId" Type="Int32" Nullable="false" />
-          <Property Name="USD" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="USD" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
           <Property Name="Comment" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Time" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="ChangeDate" Type="DateTime" Nullable="false" Precision="7" />
-          <NavigationProperty Name="Category" Relationship="Self.FK_Transaction_Category" FromRole="Transaction" ToRole="Category" />
-          <Property Name="Time" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="Category" Relationship="ExpenseAPIModel.FK_Transaction_Category" FromRole="Transaction" ToRole="Category" />
         </EntityType>
         <EntityType Name="User">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="UserId" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Categories" Relationship="Self.FK_Category_User" FromRole="User" ToRole="Category" />
+          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="Categories" Relationship="ExpenseAPIModel.FK_Category_User" FromRole="User" ToRole="Category" />
         </EntityType>
         <Association Name="FK_Category_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Category" Type="Self.Category" Multiplicity="*" />
+          <End Type="ExpenseAPIModel.User" Role="User" Multiplicity="1" />
+          <End Type="ExpenseAPIModel.Category" Role="Category" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
-              <PropertyRef Name="Id" />
+              <PropertyRef Name="UserId" />
             </Principal>
             <Dependent Role="Category">
               <PropertyRef Name="UserId" />
@@ -125,30 +140,17 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Transaction_Category">
-          <End Role="Category" Type="Self.Category" Multiplicity="1" />
-          <End Role="Transaction" Type="Self.Transaction" Multiplicity="*" />
+          <End Type="ExpenseAPIModel.Category" Role="Category" Multiplicity="1" />
+          <End Type="ExpenseAPIModel.Transaction" Role="Transaction" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Category">
-              <PropertyRef Name="Id" />
+              <PropertyRef Name="CategoryId" />
             </Principal>
             <Dependent Role="Transaction">
               <PropertyRef Name="CategoryId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="ExpenseAPIEntities" annotation:LazyLoadingEnabled="true" a:TypeAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration">
-          <EntitySet Name="Category" EntityType="Self.Category" />
-          <EntitySet Name="Transaction" EntityType="Self.Transaction" />
-          <EntitySet Name="User" EntityType="Self.User" />
-          <AssociationSet Name="FK_Category_User" Association="Self.FK_Category_User">
-            <End Role="User" EntitySet="User" />
-            <End Role="Category" EntitySet="Category" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Transaction_Category" Association="Self.FK_Transaction_Category">
-            <End Role="Category" EntitySet="Category" />
-            <End Role="Transaction" EntitySet="Transaction" />
-          </AssociationSet>
-        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -158,25 +160,26 @@
           <EntitySetMapping Name="Category">
             <EntityTypeMapping TypeName="ExpenseAPIModel.Category">
               <MappingFragment StoreEntitySet="Category">
-                <ScalarProperty Name="Id" ColumnName="CategoryId" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="ChangeDate" ColumnName="ChangeDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Transaction">
             <EntityTypeMapping TypeName="ExpenseAPIModel.Transaction">
               <MappingFragment StoreEntitySet="Transaction">
-                <ScalarProperty Name="Time" ColumnName="Time" />
-                <ScalarProperty Name="Id" ColumnName="TransactionId" />
-                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
-                <ScalarProperty Name="USD" ColumnName="USD" />
-                <ScalarProperty Name="Comment" ColumnName="Comment" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="ChangeDate" ColumnName="ChangeDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="USD" ColumnName="USD" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -184,8 +187,8 @@
             <EntityTypeMapping TypeName="ExpenseAPIModel.User">
               <MappingFragment StoreEntitySet="User">
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="Id" ColumnName="UserId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

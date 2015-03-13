@@ -19,7 +19,7 @@ namespace ExpenseAPI.DataAccess
             this.Categories = new HashSet<Category>();
         }
     
-        public int Id { get; set; }
+        public int UserId { get; set; }
         public string Name { get; set; }
         public System.DateTime CreateDate { get; set; }
     
