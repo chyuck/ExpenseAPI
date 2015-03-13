@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.Entity.Infrastructure;
-using System.Linq;
 using DIContainer;
 using ExpenseAPI.Common;
 using ExpenseAPI.Common.Helpers;
@@ -43,23 +42,7 @@ namespace ExpenseAPI.BusinessLogic
 
             return userService.UserId;
         }
-
-        protected ValidationException CreateValidationException(string key, string format, params object[] args)
-        {
-            Checker.ArgumentIsWhitespace(key, "key");
-            Checker.ArgumentIsWhitespace(format, "format");
-
-            var message =
-                args != null && args.Any()
-                    ? string.Format(format, args)
-                    : format;
-
-            var validationError = new ValidationError(key, message);
-            var validationErrors = new ValidationErrors<BaseBusinessLogicService>(this, new[] { validationError });
-
-            throw new ValidationException(validationErrors);
-        }
-
+        
         protected void RethrowUniqueKeyException(string uniqueKeyName, Func<Exception> getException, Action action)
         {
             Checker.ArgumentIsWhitespace(uniqueKeyName, "uniqueKeyName");

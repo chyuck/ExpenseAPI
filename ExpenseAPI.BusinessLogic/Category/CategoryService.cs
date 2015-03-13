@@ -3,7 +3,6 @@ using DIContainer;
 using DIContainer.Attributes;
 using ExpenseAPI.DataAccess;
 using ExpenseAPI.Models;
-using Validator.Helpers;
 
 namespace ExpenseAPI.BusinessLogic
 {
@@ -33,20 +32,14 @@ namespace ExpenseAPI.BusinessLogic
                         .Where(c => c.UserId == userId)
                         .OrderBy(c => c.Name)
                         .AsEnumerable()
-                        .Select(c => new CategoryGet {Name = c.Name, Type = c.Type})
+                        .Select(c => new CategoryGet { Name = c.Name, Type = c.Type })
                         .ToArray();
             }
         }
 
-        private void ValidateCategoryName(string name)
-        {
-            if (!StringValidator.ValidateString(name, 1, 20, false, false))
-                throw CreateValidationException("name", "Category name must have 1-20 characters.", name);
-        }
-
         public CategoryGet GetCategory(string name)
         {
-            ValidateCategoryName(name);
+            ValidationHelper.ValidateCategoryName(name);
 
             var userId = GetUserId();
 
@@ -57,7 +50,7 @@ namespace ExpenseAPI.BusinessLogic
                         .SingleOrDefault(c => c.UserId == userId && c.Name == name);
 
                 if (dbCategory == null)
-                    throw CreateValidationException("category", "Category with '{0}' name does not exist.", name);
+                    throw new ValidationErrorException("Category with '{0}' name does not exist.", name);
 
                 return
                     new CategoryGet
@@ -73,14 +66,14 @@ namespace ExpenseAPI.BusinessLogic
             var userId = GetUserId();
 
             if (category == null)
-                throw CreateValidationException("category", "Category must be specified.");
+                throw new ValidationErrorException("Category must be specified.");
             Validator.CheckIsValid(category);
 
             var utcNow = Time.UtcNow;
 
             RethrowUniqueKeyException(
                 "UK_Category",
-                () => CreateValidationException("category", "Category with '{0}' name already exists.", category.Name),
+                () => new ValidationErrorException("Category with '{0}' name already exists.", category.Name),
                 () =>
                 {
                     using (var persistence = Container.Get<IPersistenceService>())
@@ -103,19 +96,19 @@ namespace ExpenseAPI.BusinessLogic
 
         public void UpdateCategory(string name, CategoryPut category)
         {
-            ValidateCategoryName(name);
+            ValidationHelper.ValidateCategoryName(name);
 
             var userId = GetUserId();
 
             if (category == null)
-                throw CreateValidationException("category", "Category must be specified.");
+                throw new ValidationErrorException("Category must be specified.");
             Validator.CheckIsValid(category);
 
             var utcNow = Time.UtcNow;
 
             RethrowUniqueKeyException(
                 "UK_Category",
-                () => CreateValidationException("category", "Category with '{0}' name already exists.", category.Name),
+                () => new ValidationErrorException("Category with '{0}' name already exists.", category.Name),
                 () =>
                 {
                     using (var persistence = Container.Get<IPersistenceService>())
@@ -124,7 +117,7 @@ namespace ExpenseAPI.BusinessLogic
                             persistence.GetEntitySet<Category>()
                                 .SingleOrDefault(c => c.UserId == userId && c.Name == name);
                         if (dbCategory == null)
-                            throw CreateValidationException("category", "Category with '{0}' name does not exist.", name);
+                            throw new ValidationErrorException("Category with '{0}' name does not exist.", name);
 
                         dbCategory.Name = category.Name;
                         dbCategory.Type = category.Type;
@@ -137,7 +130,7 @@ namespace ExpenseAPI.BusinessLogic
 
         public void DeleteCategory(string name)
         {
-            ValidateCategoryName(name);
+            ValidationHelper.ValidateCategoryName(name);
 
             var userId = GetUserId();
 
@@ -147,9 +140,9 @@ namespace ExpenseAPI.BusinessLogic
                     persistence.GetEntitySet<Category>()
                         .SingleOrDefault(c => c.UserId == userId && c.Name == name);
                 if (dbCategory == null)
-                    throw CreateValidationException("category", "Category with '{0}' name does not exist.", name);
+                    throw new ValidationErrorException("Category with '{0}' name does not exist.", name);
                 if (dbCategory.Transactions.Any())
-                    throw CreateValidationException("category", "Category cannot be deleted because it has transaction.");
+                    throw new ValidationErrorException("Category cannot be deleted because it has transaction.");
 
                 persistence.GetEntitySet<Category>().Remove(dbCategory);
                 persistence.SaveChanges();

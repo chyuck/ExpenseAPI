@@ -44,6 +44,12 @@ namespace ExpenseAPI.RESTAPI.Controllers
 
                 return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
             }
+            catch (ValidationErrorException ex)
+            {
+                var error = new Error { Message = ex.Message };
+
+                return Request.CreateResponse(HttpStatusCode.BadRequest, error);
+            }
             catch (Exception ex)
             {
                 var error = new Error { Message = ex.Message };

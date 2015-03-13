@@ -3,14 +3,14 @@
 namespace ExpenseAPI.BusinessLogic
 {
     [Serializable]
-    public class TransactionServiceException : Exception
+    public class ValidationErrorException : Exception
     {
-        public TransactionServiceException(string message)
+        public ValidationErrorException(string message)
             : base(message)
         {
         }
 
-        public TransactionServiceException(string format, params object[] args)
+        public ValidationErrorException(string format, params object[] args)
             : this(string.Format(format, args))
         {
         }
