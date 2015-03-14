@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using ExpenseAPI.BusinessLogic;
 using Microsoft.WindowsAzure.Mobile.Service.Security;
@@ -11,13 +12,13 @@ namespace ExpenseAPI.RESTAPI.Controllers
     {
         [HttpGet]
         [Route("")]
-        public HttpResponseMessage GetUsers()
+        public async Task<HttpResponseMessage> GetUsersAsync()
         {
-            return Execute(() =>
+            return await ExecuteAsync(async () =>
             {
                 var userService = Container.Get<IUserService>();
 
-                return userService.GetUsers();
+                return await userService.GetUsersAsync();
             });
         }
     }

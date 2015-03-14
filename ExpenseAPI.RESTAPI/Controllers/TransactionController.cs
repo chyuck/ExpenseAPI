@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using ExpenseAPI.BusinessLogic;
 using ExpenseAPI.Models;
@@ -12,37 +13,37 @@ namespace ExpenseAPI.RESTAPI.Controllers
     {
         [HttpGet]
         [Route("")]
-        public HttpResponseMessage GetTransactions([FromUri]string category)
+        public async Task<HttpResponseMessage> GetTransactionsAsync([FromUri]string category)
         {
-            return Execute(() =>
+            return await ExecuteAsync(async () =>
             {
                 var transactionService = Container.Get<ITransactionService>();
 
-                return transactionService.GetTransactions(category);
+                return await transactionService.GetTransactionsAsync(category);
             });
         }
 
         [HttpGet]
         [Route("{id}")]
-        public HttpResponseMessage GetTransaction([FromUri]string category, [FromUri]string id)
+        public async Task<HttpResponseMessage> GetTransactionAsync([FromUri]string category, [FromUri]string id)
         {
-            return Execute(() =>
+            return await ExecuteAsync(async () =>
             {
                 var transactionService = Container.Get<ITransactionService>();
 
-                return transactionService.GetTransaction(category, id);
+                return await transactionService.GetTransactionAsync(category, id);
             });
         }
 
         [HttpPost]
         [Route("")]
-        public HttpResponseMessage CreateTransaction([FromUri]string category, [FromBody]TransactionPost transaction)
+        public async Task<HttpResponseMessage> CreateTransactionAsync([FromUri]string category, [FromBody]TransactionPost transaction)
         {
-            return Execute(() =>
+            return await ExecuteAsync(async () =>
             {
                 var transactionService = Container.Get<ITransactionService>();
 
-                transactionService.CreateTransaction(category, transaction);
+                await transactionService.CreateTransactionAsync(category, transaction);
 
                 return new Information { Message = "Transaction created." };
             });
@@ -51,13 +52,13 @@ namespace ExpenseAPI.RESTAPI.Controllers
         [HttpPut]
         [HttpPatch]
         [Route("{id}")]
-        public HttpResponseMessage UpdateTransaction([FromUri]string category, [FromUri]string id, [FromBody]TransactionPut transaction)
+        public async Task<HttpResponseMessage> UpdateTransactionAsync([FromUri]string category, [FromUri]string id, [FromBody]TransactionPut transaction)
         {
-            return Execute(() =>
+            return await ExecuteAsync(async () =>
             {
                 var transactionService = Container.Get<ITransactionService>();
 
-                transactionService.UpdateTransaction(category, id, transaction);
+                await transactionService.UpdateTransactionAsync(category, id, transaction);
 
                 return new Information { Message = "Transaction updated." };
             });
@@ -65,13 +66,13 @@ namespace ExpenseAPI.RESTAPI.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public HttpResponseMessage DeleteTransaction([FromUri]string category, [FromUri]string id)
+        public async Task<HttpResponseMessage> DeleteTransactionAsync([FromUri]string category, [FromUri]string id)
         {
-            return Execute(() =>
+            return await ExecuteAsync(async () =>
             {
                 var transactionService = Container.Get<ITransactionService>();
 
-                transactionService.DeleteTransaction(category, id);
+                await transactionService.DeleteTransactionAsync(category, id);
 
                 return new Information { Message = "Transaction deleted." };
             });

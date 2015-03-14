@@ -1,4 +1,5 @@
-﻿using ExpenseAPI.Models;
+﻿using System.Threading.Tasks;
+using ExpenseAPI.Models;
 
 namespace ExpenseAPI.BusinessLogic
 {
@@ -6,18 +7,18 @@ namespace ExpenseAPI.BusinessLogic
     public interface ICategoryService
     {
         /// <summary>Returns all categories</summary>
-        CategoryGet[] GetCategories();
+        Task<CategoryGet[]> GetCategoriesAsync();
 
         /// <summary>Returns category</summary>
-        CategoryGet GetCategory(string name);
+        Task<CategoryGet> GetCategoryAsync(string name);
 
         /// <summary>Creates category</summary>
-        void CreateCategory(CategoryPost category);
+        Task CreateCategoryAsync(CategoryPost category);
 
         /// <summary>Updates category</summary>
-        void UpdateCategory(string name, CategoryPut category);
+        Task UpdateCategoryAsync(string name, CategoryPut category);
 
         /// <summary>Deletes category</summary>
-        void DeleteCategory(string name);
+        Task DeleteCategoryAsync(string name);
     }
 }

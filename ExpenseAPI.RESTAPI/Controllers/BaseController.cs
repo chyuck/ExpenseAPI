@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using DIContainer;
 using ExpenseAPI.BusinessLogic;
@@ -20,7 +21,7 @@ namespace ExpenseAPI.RESTAPI.Controllers
             get { return _container.Value; }
         }
 
-        protected HttpResponseMessage Execute<TResponse>(Func<TResponse> action)
+        protected async Task<HttpResponseMessage> ExecuteAsync<TResponse>(Func<Task<TResponse>> action)
         {
             Checker.ArgumentIsNull(action, "action");
 
@@ -30,7 +31,7 @@ namespace ExpenseAPI.RESTAPI.Controllers
 
                 using (userService.LogIn(UserName))
                 {
-                    var response = action();
+                    var response = await action();
 
                     return Request.CreateResponse(HttpStatusCode.OK, response);
                 }

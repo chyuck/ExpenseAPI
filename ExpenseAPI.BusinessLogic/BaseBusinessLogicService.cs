@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity.Infrastructure;
+using System.Threading.Tasks;
 using DIContainer;
 using ExpenseAPI.Common;
 using ExpenseAPI.Common.Helpers;
@@ -43,7 +44,7 @@ namespace ExpenseAPI.BusinessLogic
             return userService.UserId;
         }
         
-        protected void RethrowUniqueKeyException(string uniqueKeyName, Func<Exception> getException, Action action)
+        protected async Task RethrowUniqueKeyExceptionAsync(string uniqueKeyName, Func<Exception> getException, Func<Task> action)
         {
             Checker.ArgumentIsWhitespace(uniqueKeyName, "uniqueKeyName");
             Checker.ArgumentIsNull(getException, "getException");
@@ -51,7 +52,7 @@ namespace ExpenseAPI.BusinessLogic
 
             try
             {
-                action();
+                await action();
             }
             catch (DbUpdateException ex)
             {

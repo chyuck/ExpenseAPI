@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Threading.Tasks;
 
 namespace ExpenseAPI.DataAccess
 {
@@ -9,5 +10,7 @@ namespace ExpenseAPI.DataAccess
             where TEntity : class, IEntity, new();
 
         int SaveChanges();
+
+        Task<int> SaveChangesAsync();
     }
 }

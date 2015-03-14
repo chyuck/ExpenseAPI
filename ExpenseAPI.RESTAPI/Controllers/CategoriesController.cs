@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using ExpenseAPI.BusinessLogic;
 using ExpenseAPI.Models;
@@ -12,37 +13,37 @@ namespace ExpenseAPI.RESTAPI.Controllers
     {
         [HttpGet]
         [Route("")]
-        public HttpResponseMessage GetCategories()
+        public async Task<HttpResponseMessage> GetCategoriesAsync()
         {
-            return Execute(() =>
+            return await ExecuteAsync(async () =>
             {
                 var categoryService = Container.Get<ICategoryService>();
 
-                return categoryService.GetCategories();
+                return await categoryService.GetCategoriesAsync();
             });
         }
 
         [HttpGet]
         [Route("{name}")]
-        public HttpResponseMessage GetCategory([FromUri]string name)
+        public async Task<HttpResponseMessage> GetCategoryAsync([FromUri]string name)
         {
-            return Execute(() =>
+            return await ExecuteAsync(async () =>
             {
                 var categoryService = Container.Get<ICategoryService>();
 
-                return categoryService.GetCategory(name);
+                return await categoryService.GetCategoryAsync(name);
             });
         }
 
         [HttpPost]
         [Route("")]
-        public HttpResponseMessage CreateCategory([FromBody]CategoryPost category)
+        public async Task<HttpResponseMessage> CreateCategoryAsync([FromBody]CategoryPost category)
         {
-            return Execute(() =>
+            return await ExecuteAsync(async () =>
             {
                 var categoryService = Container.Get<ICategoryService>();
 
-                categoryService.CreateCategory(category);
+                await categoryService.CreateCategoryAsync(category);
 
                 return new Information { Message = "Category created." };
             });
@@ -51,13 +52,13 @@ namespace ExpenseAPI.RESTAPI.Controllers
         [HttpPut]
         [HttpPatch]
         [Route("{name}")]
-        public HttpResponseMessage UpdateCategory([FromUri]string name, [FromBody]CategoryPut category)
+        public async Task<HttpResponseMessage> UpdateCategoryAsync([FromUri]string name, [FromBody]CategoryPut category)
         {
-            return Execute(() =>
+            return await ExecuteAsync(async () =>
             {
                 var categoryService = Container.Get<ICategoryService>();
 
-                categoryService.UpdateCategory(name, category);
+                await categoryService.UpdateCategoryAsync(name, category);
 
                 return new Information { Message = "Category updated." };
             });
@@ -65,13 +66,13 @@ namespace ExpenseAPI.RESTAPI.Controllers
 
         [HttpDelete]
         [Route("{name}")]
-        public HttpResponseMessage DeleteCategory([FromUri]string name)
+        public async Task<HttpResponseMessage> DeleteCategoryAsync([FromUri]string name)
         {
-            return Execute(() =>
+            return await ExecuteAsync(async () =>
             {
                 var categoryService = Container.Get<ICategoryService>();
 
-                categoryService.DeleteCategory(name);
+                await categoryService.DeleteCategoryAsync(name);
 
                 return new Information { Message = "Category deleted." };
             });

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using DIContainer;
 using DIContainer.Attributes;
 using ExpenseAPI.DataAccess;
@@ -22,7 +24,7 @@ namespace ExpenseAPI.BusinessLogic
 
         #region Public Methods
 
-        public TransactionGet[] GetTransactions(string categoryName)
+        public async Task<TransactionGet[]> GetTransactionsAsync(string categoryName)
         {
             var userId = GetUserId();
 
@@ -30,19 +32,19 @@ namespace ExpenseAPI.BusinessLogic
 
             using (var persistence = Container.Get<IPersistenceService>())
             {
-                var category = GetCategory(persistence, userId, categoryName);
+                var category = await GetCategoryAsync(persistence, userId, categoryName);
 
-                return
+                var dbTransactions = await
                     persistence.GetEntitySet<Transaction>()
                         .Where(t => t.CategoryId == category.CategoryId)
                         .OrderByDescending(t => t.Time)
-                        .AsEnumerable()
-                        .Select(CreateTransaction)
-                        .ToArray();
+                        .ToArrayAsync();
+
+                return dbTransactions.Select(CreateTransaction).ToArray();
             }
         }
 
-        public TransactionGet GetTransaction(string categoryName, string id)
+        public async Task<TransactionGet> GetTransactionAsync(string categoryName, string id)
         {
             var userId = GetUserId();
 
@@ -51,14 +53,14 @@ namespace ExpenseAPI.BusinessLogic
             
             using (var persistence = Container.Get<IPersistenceService>())
             {
-                var dbCategory = GetCategory(persistence, userId, categoryName);
-                var dbTransaction = GetTransaction(persistence, id, dbCategory.CategoryId);
+                var dbCategory = await GetCategoryAsync(persistence, userId, categoryName);
+                var dbTransaction = await GetTransactionAsync(persistence, id, dbCategory.CategoryId);
 
                 return CreateTransaction(dbTransaction);
             }
         }
 
-        public void CreateTransaction(string categoryName, TransactionPost transaction)
+        public async Task CreateTransactionAsync(string categoryName, TransactionPost transaction)
         {
             var userId = GetUserId();
 
@@ -72,7 +74,7 @@ namespace ExpenseAPI.BusinessLogic
 
             using (var persistence = Container.Get<IPersistenceService>())
             {
-                var dbCategory = GetCategory(persistence, userId, categoryName);
+                var dbCategory = await GetCategoryAsync(persistence, userId, categoryName);
                 
                 var dbTransaction =
                     new Transaction
@@ -87,11 +89,11 @@ namespace ExpenseAPI.BusinessLogic
                     };
 
                 persistence.GetEntitySet<Transaction>().Add(dbTransaction);
-                persistence.SaveChanges();
+                await persistence.SaveChangesAsync();
             }
         }
 
-        public void UpdateTransaction(string categoryName, string id, TransactionPut transaction)
+        public async Task UpdateTransactionAsync(string categoryName, string id, TransactionPut transaction)
         {
             var userId = GetUserId();
 
@@ -106,19 +108,19 @@ namespace ExpenseAPI.BusinessLogic
 
             using (var persistence = Container.Get<IPersistenceService>())
             {
-                var dbCategory = GetCategory(persistence, userId, categoryName);
-                var dbTransaction = GetTransaction(persistence, id, dbCategory.CategoryId);
+                var dbCategory = await GetCategoryAsync(persistence, userId, categoryName);
+                var dbTransaction = await GetTransactionAsync(persistence, id, dbCategory.CategoryId);
 
                 dbTransaction.USD = transaction.Usd;
                 dbTransaction.Comment = transaction.Comment;
                 dbTransaction.Time = transaction.Time.ToUniversalTime();
                 dbTransaction.ChangeDate = utcNow;
 
-                persistence.SaveChanges();
+                await persistence.SaveChangesAsync();
             }
         }
 
-        public void DeleteTransaction(string categoryName, string id)
+        public async Task DeleteTransactionAsync(string categoryName, string id)
         {
             var userId = GetUserId();
 
@@ -127,11 +129,11 @@ namespace ExpenseAPI.BusinessLogic
 
             using (var persistence = Container.Get<IPersistenceService>())
             {
-                var dbCategory = GetCategory(persistence, userId, categoryName);
-                var dbTransaction = GetTransaction(persistence, id, dbCategory.CategoryId);
+                var dbCategory = await GetCategoryAsync(persistence, userId, categoryName);
+                var dbTransaction = await GetTransactionAsync(persistence, id, dbCategory.CategoryId);
 
                 persistence.GetEntitySet<Transaction>().Remove(dbTransaction);
-                persistence.SaveChanges();
+                await persistence.SaveChangesAsync();
             }
         }
 
@@ -140,11 +142,11 @@ namespace ExpenseAPI.BusinessLogic
 
         #region Private Methods
 
-        private static Category GetCategory(IPersistenceService persistence, int userId, string categoryName)
+        private async static Task<Category> GetCategoryAsync(IPersistenceService persistence, int userId, string categoryName)
         {
-            var category =
+            var category = await
                     persistence.GetEntitySet<Category>()
-                        .SingleOrDefault(c => c.UserId == userId && c.Name == categoryName);
+                        .SingleOrDefaultAsync(c => c.UserId == userId && c.Name == categoryName);
             if (category == null)
                 throw new ValidationErrorException("Category with '{0}' name does not exist.", categoryName);
 
@@ -164,15 +166,15 @@ namespace ExpenseAPI.BusinessLogic
                 };
         }
 
-        private static Transaction GetTransaction(IPersistenceService persistence, string id, int categoryId)
+        private async static Task<Transaction> GetTransactionAsync(IPersistenceService persistence, string id, int categoryId)
         {
             Guid guid;
             if (!Guid.TryParseExact(id, "N", out guid))
                 throw new ValidationErrorException("Transaction ID has invalid format.");
 
-            var transaction =
+            var transaction = await
                 persistence.GetEntitySet<Transaction>()
-                    .SingleOrDefault(t => t.Id == guid && t.CategoryId == categoryId);
+                    .SingleOrDefaultAsync(t => t.Id == guid && t.CategoryId == categoryId);
             if (transaction == null)
                 throw new ValidationErrorException("Transaction with '{0}' ID does not exist.", id);
 

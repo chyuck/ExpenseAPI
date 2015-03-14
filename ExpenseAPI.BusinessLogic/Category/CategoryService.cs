@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
 using DIContainer;
 using DIContainer.Attributes;
 using ExpenseAPI.DataAccess;
@@ -21,23 +23,23 @@ namespace ExpenseAPI.BusinessLogic
 
         #region Public Methods
 
-        public CategoryGet[] GetCategories()
+        public async Task<CategoryGet[]> GetCategoriesAsync()
         {
             var userId = GetUserId();
 
             using (var persistence = Container.Get<IPersistenceService>())
             {
-                return
+                var dbCategories = await 
                     persistence.GetEntitySet<Category>()
                         .Where(c => c.UserId == userId)
                         .OrderBy(c => c.Name)
-                        .AsEnumerable()
-                        .Select(CreateCategory)
-                        .ToArray();
+                        .ToArrayAsync();
+
+                return dbCategories.Select(CreateCategory).ToArray();
             }
         }
 
-        public CategoryGet GetCategory(string name)
+        public async Task<CategoryGet> GetCategoryAsync(string name)
         {
             var userId = GetUserId();
 
@@ -45,13 +47,13 @@ namespace ExpenseAPI.BusinessLogic
 
             using (var persistence = Container.Get<IPersistenceService>())
             {
-                var dbCategory = GetCategory(persistence, userId, name);
+                var dbCategory = await GetCategoryAsync(persistence, userId, name);
 
                 return CreateCategory(dbCategory);
             }
         }
 
-        public void CreateCategory(CategoryPost category)
+        public async Task CreateCategoryAsync(CategoryPost category)
         {
             var userId = GetUserId();
 
@@ -61,10 +63,10 @@ namespace ExpenseAPI.BusinessLogic
 
             var utcNow = Time.UtcNow;
 
-            RethrowUniqueKeyException(
+            await RethrowUniqueKeyExceptionAsync(
                 "UK_Category",
                 () => new ValidationErrorException("Category with '{0}' name already exists.", category.Name),
-                () =>
+                async () =>
                 {
                     using (var persistence = Container.Get<IPersistenceService>())
                     {
@@ -79,12 +81,12 @@ namespace ExpenseAPI.BusinessLogic
                             };
 
                         persistence.GetEntitySet<Category>().Add(dbCategory);
-                        persistence.SaveChanges();
+                        await persistence.SaveChangesAsync();
                     }
                 });
         }
 
-        public void UpdateCategory(string name, CategoryPut category)
+        public async Task UpdateCategoryAsync(string name, CategoryPut category)
         {
             var userId = GetUserId();
             
@@ -96,25 +98,25 @@ namespace ExpenseAPI.BusinessLogic
 
             var utcNow = Time.UtcNow;
 
-            RethrowUniqueKeyException(
+            await RethrowUniqueKeyExceptionAsync(
                 "UK_Category",
                 () => new ValidationErrorException("Category with '{0}' name already exists.", category.Name),
-                () =>
+                async () =>
                 {
                     using (var persistence = Container.Get<IPersistenceService>())
                     {
-                        var dbCategory = GetCategory(persistence, userId, category.Name);
+                        var dbCategory = await GetCategoryAsync(persistence, userId, category.Name);
 
                         dbCategory.Name = category.Name;
                         dbCategory.Type = category.Type;
                         dbCategory.ChangeDate = utcNow;
                         
-                        persistence.SaveChanges();
+                        await persistence.SaveChangesAsync();
                     }
                 });
         }
 
-        public void DeleteCategory(string name)
+        public async Task DeleteCategoryAsync(string name)
         {
             var userId = GetUserId();
 
@@ -122,12 +124,12 @@ namespace ExpenseAPI.BusinessLogic
 
             using (var persistence = Container.Get<IPersistenceService>())
             {
-                var dbCategory = GetCategory(persistence, userId, name);
+                var dbCategory = await GetCategoryAsync(persistence, userId, name);
                 if (dbCategory.Transactions.Any())
                     throw new ValidationErrorException("Category cannot be deleted because it has transaction.");
 
                 persistence.GetEntitySet<Category>().Remove(dbCategory);
-                persistence.SaveChanges();
+                await persistence.SaveChangesAsync();
             }
         }
         
@@ -146,11 +148,11 @@ namespace ExpenseAPI.BusinessLogic
                 };
         }
 
-        private static Category GetCategory(IPersistenceService persistence, int userId, string name)
+        private static async Task<Category> GetCategoryAsync(IPersistenceService persistence, int userId, string name)
         {
-            var category =
+            var category = await
                     persistence.GetEntitySet<Category>()
-                        .SingleOrDefault(c => c.UserId == userId && c.Name == name);
+                        .SingleOrDefaultAsync(c => c.UserId == userId && c.Name == name);
             if (category == null)
                 throw new ValidationErrorException("Category with '{0}' name does not exist.", name);
 

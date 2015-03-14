@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using ExpenseAPI.Models;
 
 namespace ExpenseAPI.BusinessLogic
@@ -22,10 +23,10 @@ namespace ExpenseAPI.BusinessLogic
         /// <summary>Returns whether user exists</summary>
         bool DoesUserExist(string name);
 
-        /// <summary>Logs in user</summary>
-        void CreateUser(string name);
+        /// <summary>Creates user</summary>
+        Task CreateUserAsync(string name);
 
         /// <summary>Returns all users</summary>
-        UserGet[] GetUsers();
+        Task<UserGet[]> GetUsersAsync();
     }
 }

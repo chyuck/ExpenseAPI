@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using DIContainer;
 using DIContainer.Attributes;
 using ExpenseAPI.DataAccess;
@@ -107,16 +109,16 @@ namespace ExpenseAPI.BusinessLogic
             }
         }
 
-        public void CreateUser(string name)
+        public async Task CreateUserAsync(string name)
         {
             ValidateUserName(name);
 
             var utcNow = Time.UtcNow;
 
-            RethrowUniqueKeyException(
+            await RethrowUniqueKeyExceptionAsync(
                 "UK_User",
                 () => new UserServiceException("User '{0}' already exists.", name),
-                () =>
+                async () =>
                 {
                     using (var persistence = Container.Get<IPersistenceService>())
                     {
@@ -129,7 +131,7 @@ namespace ExpenseAPI.BusinessLogic
 
                         persistence.GetEntitySet<User>().Add(user);
 
-                        persistence.SaveChanges();
+                        await persistence.SaveChangesAsync();
                     }
                 });
         }
@@ -142,15 +144,15 @@ namespace ExpenseAPI.BusinessLogic
             }
         }
         
-        public UserGet[] GetUsers()
+        public async Task<UserGet[]> GetUsersAsync()
         {
             using (var persistence = Container.Get<IPersistenceService>())
             {
-                return 
+                return await 
                     persistence.GetEntitySet<User>()
                         .OrderBy(u => u.Name)
                         .Select(u => new UserGet { Name = u.Name })
-                        .ToArray();
+                        .ToArrayAsync();
             }
         }
 
