@@ -51,16 +51,44 @@ namespace ExpenseAPI.BusinessLogic
 
             using (var persistence = Container.Get<IPersistenceService>())
             {
-                var category = GetCategory(persistence, userId, categoryName);
-                var transaction = GetTransaction(persistence, id, category.CategoryId);
+                var dbCategory = GetCategory(persistence, userId, categoryName);
+                var dbTransaction = GetTransaction(persistence, id, dbCategory.CategoryId);
 
-                return CreateTransaction(transaction);
+                return CreateTransaction(dbTransaction);
             }
         }
 
         public void CreateTransaction(string categoryName, TransactionPost transaction)
         {
-            throw new NotImplementedException();
+            var userId = GetUserId();
+
+            ValidationHelper.ValidateCategoryName(categoryName);
+
+            if (transaction == null)
+                throw new ValidationErrorException("Transaction must be specified.");
+            Validator.CheckIsValid(transaction);
+
+            var utcNow = Time.UtcNow;
+
+            using (var persistence = Container.Get<IPersistenceService>())
+            {
+                var dbCategory = GetCategory(persistence, userId, categoryName);
+                
+                var dbTransaction =
+                    new Transaction
+                    {
+                        CategoryId = dbCategory.CategoryId,
+                        Id = Guid.NewGuid(),
+                        USD = transaction.Usd,
+                        Time = transaction.Time.ToUniversalTime(),
+                        Comment = transaction.Comment,
+                        CreateDate = utcNow,
+                        ChangeDate = utcNow
+                    };
+
+                persistence.GetEntitySet<Transaction>().Add(dbTransaction);
+                persistence.SaveChanges();
+            }
         }
 
         public void UpdateTransaction(string categoryName, string id, TransactionPut transaction)

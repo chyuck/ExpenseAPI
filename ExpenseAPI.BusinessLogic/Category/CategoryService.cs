@@ -19,7 +19,7 @@ namespace ExpenseAPI.BusinessLogic
         #endregion
 
 
-        #region Methods
+        #region Public Methods
 
         public CategoryGet[] GetCategories()
         {
@@ -32,7 +32,7 @@ namespace ExpenseAPI.BusinessLogic
                         .Where(c => c.UserId == userId)
                         .OrderBy(c => c.Name)
                         .AsEnumerable()
-                        .Select(c => new CategoryGet { Name = c.Name, Type = c.Type })
+                        .Select(CreateCategory)
                         .ToArray();
             }
         }
@@ -45,19 +45,9 @@ namespace ExpenseAPI.BusinessLogic
 
             using (var persistence = Container.Get<IPersistenceService>())
             {
-                var dbCategory = 
-                    persistence.GetEntitySet<Category>()
-                        .SingleOrDefault(c => c.UserId == userId && c.Name == name);
+                var dbCategory = GetCategory(persistence, userId, name);
 
-                if (dbCategory == null)
-                    throw new ValidationErrorException("Category with '{0}' name does not exist.", name);
-
-                return
-                    new CategoryGet
-                    {
-                        Name = dbCategory.Name,
-                        Type = dbCategory.Type
-                    };
+                return CreateCategory(dbCategory);
             }
         }
 
@@ -113,11 +103,7 @@ namespace ExpenseAPI.BusinessLogic
                 {
                     using (var persistence = Container.Get<IPersistenceService>())
                     {
-                        var dbCategory =
-                            persistence.GetEntitySet<Category>()
-                                .SingleOrDefault(c => c.UserId == userId && c.Name == name);
-                        if (dbCategory == null)
-                            throw new ValidationErrorException("Category with '{0}' name does not exist.", name);
+                        var dbCategory = GetCategory(persistence, userId, category.Name);
 
                         dbCategory.Name = category.Name;
                         dbCategory.Type = category.Type;
@@ -136,11 +122,7 @@ namespace ExpenseAPI.BusinessLogic
 
             using (var persistence = Container.Get<IPersistenceService>())
             {
-                var dbCategory =
-                    persistence.GetEntitySet<Category>()
-                        .SingleOrDefault(c => c.UserId == userId && c.Name == name);
-                if (dbCategory == null)
-                    throw new ValidationErrorException("Category with '{0}' name does not exist.", name);
+                var dbCategory = GetCategory(persistence, userId, name);
                 if (dbCategory.Transactions.Any())
                     throw new ValidationErrorException("Category cannot be deleted because it has transaction.");
 
@@ -149,6 +131,32 @@ namespace ExpenseAPI.BusinessLogic
             }
         }
         
+        #endregion
+
+
+        #region Private Methods
+
+        private static CategoryGet CreateCategory(Category category)
+        {
+            return
+                new CategoryGet
+                {
+                    Name = category.Name,
+                    Type = category.Type
+                };
+        }
+
+        private static Category GetCategory(IPersistenceService persistence, int userId, string name)
+        {
+            var category =
+                    persistence.GetEntitySet<Category>()
+                        .SingleOrDefault(c => c.UserId == userId && c.Name == name);
+            if (category == null)
+                throw new ValidationErrorException("Category with '{0}' name does not exist.", name);
+
+            return category;
+        }
+
         #endregion
     }
 }
