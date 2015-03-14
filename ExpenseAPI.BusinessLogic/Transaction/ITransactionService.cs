@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ExpenseAPI.Models;
 
 namespace ExpenseAPI.BusinessLogic
@@ -7,7 +8,7 @@ namespace ExpenseAPI.BusinessLogic
     public interface ITransactionService
     {
         /// <summary>Returns all transactions for category</summary>
-        Task<TransactionGet[]> GetTransactionsAsync(string categoryName);
+        Task<TransactionGet[]> GetTransactionsAsync(string categoryName, DateTime? from = null, DateTime? to = null);
 
         /// <summary>Returns transaction</summary>
         Task<TransactionGet> GetTransactionAsync(string categoryName, string id);

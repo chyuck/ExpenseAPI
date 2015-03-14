@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using ExpenseAPI.BusinessLogic;
@@ -13,13 +14,13 @@ namespace ExpenseAPI.RESTAPI.Controllers
     {
         [HttpGet]
         [Route("")]
-        public async Task<HttpResponseMessage> GetTransactionsAsync([FromUri]string category)
+        public async Task<HttpResponseMessage> GetTransactionsAsync([FromUri]string category, DateTime? from = null, DateTime? to = null)
         {
             return await ExecuteAsync(async () =>
             {
                 var transactionService = Container.Get<ITransactionService>();
 
-                return await transactionService.GetTransactionsAsync(category);
+                return await transactionService.GetTransactionsAsync(category, from, to);
             });
         }
 
