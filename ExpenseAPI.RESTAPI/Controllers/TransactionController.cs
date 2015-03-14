@@ -13,6 +13,18 @@ namespace ExpenseAPI.RESTAPI.Controllers
     public class TransactionController : BaseController
     {
         [HttpGet]
+        [Route("~/transactions")]
+        public async Task<HttpResponseMessage> GetTransactionsAsync(DateTime? from = null, DateTime? to = null)
+        {
+            return await ExecuteAsync(async () =>
+            {
+                var transactionService = Container.Get<ITransactionService>();
+
+                return await transactionService.GetTransactionsAsync(from, to);
+            });
+        }
+
+        [HttpGet]
         [Route("")]
         public async Task<HttpResponseMessage> GetTransactionsAsync([FromUri]string category, DateTime? from = null, DateTime? to = null)
         {

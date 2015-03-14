@@ -25,6 +25,28 @@ namespace ExpenseAPI.BusinessLogic
 
         #region Public Methods
 
+        public async Task<TransactionGet[]> GetTransactionsAsync(DateTime? from, DateTime? to)
+        {
+            var userId = GetUserId();
+
+            using (var persistence = Container.Get<IPersistenceService>())
+            {
+                var query = 
+                    persistence.GetEntitySet<Transaction>()
+                        .Where(t => t.Category.UserId == userId);
+
+                query = ApplyDateCondition(query, from, to);
+
+                var dbTransactions = await
+                    query
+                        .OrderByDescending(t => t.Date)
+                        .ThenByDescending(t => t.TransactionId)
+                        .ToArrayAsync();
+
+                return dbTransactions.Select(CreateTransaction).ToArray();
+            }
+        }
+
         public async Task<TransactionGet[]> GetTransactionsAsync(string categoryName, DateTime? from, DateTime? to)
         {
             var userId = GetUserId();

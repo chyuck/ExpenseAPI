@@ -7,6 +7,9 @@ namespace ExpenseAPI.BusinessLogic
     /// <summary>Transaction service</summary>
     public interface ITransactionService
     {
+        /// <summary>Returns all transactions</summary>
+        Task<TransactionGet[]> GetTransactionsAsync(DateTime? from = null, DateTime? to = null);
+
         /// <summary>Returns all transactions for category</summary>
         Task<TransactionGet[]> GetTransactionsAsync(string categoryName, DateTime? from = null, DateTime? to = null);
 
