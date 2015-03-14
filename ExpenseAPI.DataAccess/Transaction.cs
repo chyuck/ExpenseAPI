@@ -19,9 +19,9 @@ namespace ExpenseAPI.DataAccess
         public System.Guid Id { get; set; }
         public decimal USD { get; set; }
         public string Comment { get; set; }
-        public System.DateTime Time { get; set; }
         public System.DateTime CreateDate { get; set; }
         public System.DateTime ChangeDate { get; set; }
+        public System.DateTime Date { get; set; }
     
         public virtual Category Category { get; set; }
     }

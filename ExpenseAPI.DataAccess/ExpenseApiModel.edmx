@@ -25,7 +25,7 @@
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="USD" Type="money" Nullable="false" />
           <Property Name="Comment" Type="nvarchar" MaxLength="100" />
-          <Property Name="Time" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
           <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="ChangeDate" Type="datetime2" Precision="7" Nullable="false" />
         </EntityType>
@@ -113,10 +113,10 @@
           <Property Name="Id" Type="Guid" Nullable="false" />
           <Property Name="USD" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
           <Property Name="Comment" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Time" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="ChangeDate" Type="DateTime" Nullable="false" Precision="7" />
           <NavigationProperty Name="Category" Relationship="ExpenseAPIModel.FK_Transaction_Category" FromRole="Transaction" ToRole="Category" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -172,9 +172,9 @@
           <EntitySetMapping Name="Transaction">
             <EntityTypeMapping TypeName="ExpenseAPIModel.Transaction">
               <MappingFragment StoreEntitySet="Transaction">
+                <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="ChangeDate" ColumnName="ChangeDate" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="Time" ColumnName="Time" />
                 <ScalarProperty Name="Comment" ColumnName="Comment" />
                 <ScalarProperty Name="USD" ColumnName="USD" />
                 <ScalarProperty Name="Id" ColumnName="Id" />

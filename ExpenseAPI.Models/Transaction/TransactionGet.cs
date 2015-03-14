@@ -18,7 +18,7 @@ namespace ExpenseAPI.Models
         [DataMember(Name = "comment")]
         public string Comment { get; set; }
 
-        [DataMember(Name = "time")]
-        public DateTime Time { get; set; }
+        [DataMember(Name = "date")]
+        public DateTime Date { get; set; }
     }
 }

@@ -37,7 +37,8 @@ namespace ExpenseAPI.BusinessLogic
                 var dbTransactions = await
                     persistence.GetEntitySet<Transaction>()
                         .Where(t => t.CategoryId == category.CategoryId)
-                        .OrderByDescending(t => t.Time)
+                        .OrderByDescending(t => t.Date)
+                        .ThenByDescending(t => t.TransactionId)
                         .ToArrayAsync();
 
                 return dbTransactions.Select(CreateTransaction).ToArray();
@@ -82,7 +83,7 @@ namespace ExpenseAPI.BusinessLogic
                         CategoryId = dbCategory.CategoryId,
                         Id = Guid.NewGuid(),
                         USD = transaction.Usd,
-                        Time = transaction.Time.ToUniversalTime(),
+                        Date = transaction.Date.Date,
                         Comment = transaction.Comment,
                         CreateDate = utcNow,
                         ChangeDate = utcNow
@@ -113,7 +114,7 @@ namespace ExpenseAPI.BusinessLogic
 
                 dbTransaction.USD = transaction.Usd;
                 dbTransaction.Comment = transaction.Comment;
-                dbTransaction.Time = transaction.Time.ToUniversalTime();
+                dbTransaction.Date = transaction.Date.Date;
                 dbTransaction.ChangeDate = utcNow;
 
                 await persistence.SaveChangesAsync();
@@ -160,7 +161,7 @@ namespace ExpenseAPI.BusinessLogic
                 {
                     Id = transaction.Id.ToString("N"),
                     Category = transaction.Category.Name,
-                    Time = DateTime.SpecifyKind(transaction.Time, DateTimeKind.Utc),
+                    Date = transaction.Date,
                     Usd = transaction.USD,
                     Comment = transaction.Comment
                 };

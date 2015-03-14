@@ -62,7 +62,7 @@ CREATE TABLE [dbo].[Transaction]
 	[Id] [uniqueidentifier] NOT NULL,
 	[USD] [money] NOT NULL,
 	[Comment] [nvarchar](100) NULL,
-	[Time] [datetime2](7) NOT NULL,
+	[Date] [date] NOT NULL,
 	[CreateDate] [datetime2](7) NOT NULL,
 	[ChangeDate] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_Transaction] PRIMARY KEY CLUSTERED ([TransactionId])
@@ -74,4 +74,6 @@ GO
 CREATE NONCLUSTERED INDEX [IX_Transaction_Category] ON [dbo].[Transaction] ([CategoryId])
 GO
 CREATE NONCLUSTERED INDEX [IX_Transaction_Id] ON [dbo].[Transaction] ([Id])
+GO
+CREATE NONCLUSTERED INDEX [IX_Transaction_Date] ON [dbo].[Transaction] ([Date])
 GO
