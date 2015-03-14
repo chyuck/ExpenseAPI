@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DIContainer;
 using DIContainer.Attributes;
 using ExpenseAPI.DataAccess;
@@ -19,7 +20,7 @@ namespace ExpenseAPI.BusinessLogic
         #endregion
 
 
-        #region Methods
+        #region Public Methods
 
         public TransactionGet[] GetTransactions(string categoryName)
         {
@@ -29,48 +30,91 @@ namespace ExpenseAPI.BusinessLogic
 
             using (var persistence = Container.Get<IPersistenceService>())
             {
-                var dbCategory =
-                    persistence.GetEntitySet<Category>()
-                        .SingleOrDefault(c => c.UserId == userId && c.Name == categoryName);
-                if (dbCategory == null)
-                    throw new ValidationErrorException("Category with '{0}' name does not exist.", categoryName);
+                var category = GetCategory(persistence, userId, categoryName);
 
                 return
                     persistence.GetEntitySet<Transaction>()
-                        .Where(t => t.CategoryId == dbCategory.CategoryId)
+                        .Where(t => t.CategoryId == category.CategoryId)
                         .OrderByDescending(t => t.Time)
                         .AsEnumerable()
-                        .Select(t => 
-                            new TransactionGet
-                            {
-                                Id = t.Id.ToString("N"),
-                                Category = dbCategory.Name,
-                                UtcTime = t.Time,
-                                Usd = t.USD,
-                                Comment = t.Comment
-                            })
+                        .Select(CreateTransaction)
                         .ToArray();
             }
         }
 
         public TransactionGet GetTransaction(string categoryName, string id)
         {
-            throw new System.NotImplementedException();
+            ValidationHelper.ValidateCategoryName(categoryName);
+            ValidationHelper.ValidateTransactionId(id);
+
+            var userId = GetUserId();
+
+            using (var persistence = Container.Get<IPersistenceService>())
+            {
+                var category = GetCategory(persistence, userId, categoryName);
+                var transaction = GetTransaction(persistence, id, category.CategoryId);
+
+                return CreateTransaction(transaction);
+            }
         }
 
         public void CreateTransaction(string categoryName, TransactionPost transaction)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void UpdateTransaction(string categoryName, string id, TransactionPut transaction)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void DeleteTransaction(string categoryName, string id)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+
+        #region Private Methods
+
+        private static Category GetCategory(IPersistenceService persistence, int userId, string categoryName)
+        {
+            var category =
+                    persistence.GetEntitySet<Category>()
+                        .SingleOrDefault(c => c.UserId == userId && c.Name == categoryName);
+            if (category == null)
+                throw new ValidationErrorException("Category with '{0}' name does not exist.", categoryName);
+
+            return category;
+        }
+
+        private static TransactionGet CreateTransaction(Transaction transaction)
+        {
+            return
+                new TransactionGet
+                {
+                    Id = transaction.Id.ToString("N"),
+                    Category = transaction.Category.Name,
+                    Time = DateTime.SpecifyKind(transaction.Time, DateTimeKind.Utc),
+                    Usd = transaction.USD,
+                    Comment = transaction.Comment
+                };
+        }
+
+        private static Transaction GetTransaction(IPersistenceService persistence, string id, int categoryId)
+        {
+            Guid guid;
+            if (!Guid.TryParseExact(id, "N", out guid))
+                throw new ValidationErrorException("Transaction ID has invalid format.");
+
+            var transaction =
+                persistence.GetEntitySet<Transaction>()
+                    .SingleOrDefault(t => t.Id == guid && t.CategoryId == categoryId);
+            if (transaction == null)
+                throw new ValidationErrorException("Transaction with '{0}' ID does not exist.", id);
+
+            return transaction;
         }
 
         #endregion

@@ -7,11 +7,6 @@ namespace ExpenseAPI.Models
     [DataContract(Name = "transaction")]
     public class TransactionPost
     {
-        [DataMember(Name = "id")]
-        [StringValidate("ID must have 1-20 characters.",
-            CanBeEmpty = false, CanBeNull = false, MinLength = 1, MaxLength = 20)]
-        public string Id { get; set; }
-
         [DecimalValidate("Invalid value for USD amount.")]
         [DataMember(Name = "usd")]
         public decimal Usd { get; set; }
@@ -21,7 +16,7 @@ namespace ExpenseAPI.Models
         [DataMember(Name = "comment")]
         public string Comment { get; set; }
 
-        [DataMember(Name = "utcTime")]
-        public DateTime UtcTime { get; set; }
+        [DataMember(Name = "time")]
+        public DateTime Time { get; set; }
     }
 }
