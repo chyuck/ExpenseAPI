@@ -39,9 +39,9 @@ namespace ExpenseAPI.BusinessLogic
 
         public CategoryGet GetCategory(string name)
         {
-            ValidationHelper.ValidateCategoryName(name);
-
             var userId = GetUserId();
+
+            ValidationHelper.ValidateCategoryName(name);
 
             using (var persistence = Container.Get<IPersistenceService>())
             {
@@ -86,9 +86,9 @@ namespace ExpenseAPI.BusinessLogic
 
         public void UpdateCategory(string name, CategoryPut category)
         {
-            ValidationHelper.ValidateCategoryName(name);
-
             var userId = GetUserId();
+            
+            ValidationHelper.ValidateCategoryName(name);
 
             if (category == null)
                 throw new ValidationErrorException("Category must be specified.");
@@ -116,9 +116,9 @@ namespace ExpenseAPI.BusinessLogic
 
         public void DeleteCategory(string name)
         {
-            ValidationHelper.ValidateCategoryName(name);
-
             var userId = GetUserId();
+
+            ValidationHelper.ValidateCategoryName(name);
 
             using (var persistence = Container.Get<IPersistenceService>())
             {

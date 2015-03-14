@@ -24,9 +24,9 @@ namespace ExpenseAPI.BusinessLogic
 
         public TransactionGet[] GetTransactions(string categoryName)
         {
-            ValidationHelper.ValidateCategoryName(categoryName);
-
             var userId = GetUserId();
+
+            ValidationHelper.ValidateCategoryName(categoryName);
 
             using (var persistence = Container.Get<IPersistenceService>())
             {
@@ -44,11 +44,11 @@ namespace ExpenseAPI.BusinessLogic
 
         public TransactionGet GetTransaction(string categoryName, string id)
         {
-            ValidationHelper.ValidateCategoryName(categoryName);
-            ValidationHelper.ValidateTransactionId(id);
-
             var userId = GetUserId();
 
+            ValidationHelper.ValidateCategoryName(categoryName);
+            ValidationHelper.ValidateTransactionId(id);
+            
             using (var persistence = Container.Get<IPersistenceService>())
             {
                 var dbCategory = GetCategory(persistence, userId, categoryName);
@@ -93,12 +93,46 @@ namespace ExpenseAPI.BusinessLogic
 
         public void UpdateTransaction(string categoryName, string id, TransactionPut transaction)
         {
-            throw new NotImplementedException();
+            var userId = GetUserId();
+
+            ValidationHelper.ValidateCategoryName(categoryName);
+            ValidationHelper.ValidateTransactionId(id);
+
+            if (transaction == null)
+                throw new ValidationErrorException("Transaction must be specified.");
+            Validator.CheckIsValid(transaction);
+
+            var utcNow = Time.UtcNow;
+
+            using (var persistence = Container.Get<IPersistenceService>())
+            {
+                var dbCategory = GetCategory(persistence, userId, categoryName);
+                var dbTransaction = GetTransaction(persistence, id, dbCategory.CategoryId);
+
+                dbTransaction.USD = transaction.Usd;
+                dbTransaction.Comment = transaction.Comment;
+                dbTransaction.Time = transaction.Time.ToUniversalTime();
+                dbTransaction.ChangeDate = utcNow;
+
+                persistence.SaveChanges();
+            }
         }
 
         public void DeleteTransaction(string categoryName, string id)
         {
-            throw new NotImplementedException();
+            var userId = GetUserId();
+
+            ValidationHelper.ValidateCategoryName(categoryName);
+            ValidationHelper.ValidateTransactionId(id);
+
+            using (var persistence = Container.Get<IPersistenceService>())
+            {
+                var dbCategory = GetCategory(persistence, userId, categoryName);
+                var dbTransaction = GetTransaction(persistence, id, dbCategory.CategoryId);
+
+                persistence.GetEntitySet<Transaction>().Remove(dbTransaction);
+                persistence.SaveChanges();
+            }
         }
 
         #endregion
