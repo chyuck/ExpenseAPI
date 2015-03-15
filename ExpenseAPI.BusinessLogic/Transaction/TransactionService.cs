@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using DIContainer;
 using DIContainer.Attributes;
-using ExpenseAPI.Common.Helpers;
 using ExpenseAPI.DataAccess;
 using ExpenseAPI.Models;
 
@@ -35,7 +34,7 @@ namespace ExpenseAPI.BusinessLogic
                     persistence.GetEntitySet<Transaction>()
                         .Where(t => t.Category.UserId == userId);
 
-                query = ApplyDateCondition(query, from, to);
+                query = QueryHelper.ApplyDateCondition(Container, query, from, to);
 
                 var dbTransactions = await
                     query
@@ -61,7 +60,7 @@ namespace ExpenseAPI.BusinessLogic
                     persistence.GetEntitySet<Transaction>()
                         .Where(t => t.CategoryId == category.CategoryId);
 
-                query = ApplyDateCondition(query, from, to);
+                query = QueryHelper.ApplyDateCondition(Container, query, from, to);
 
                 var dbTransactions = await
                     query
@@ -208,25 +207,6 @@ namespace ExpenseAPI.BusinessLogic
                 throw new ValidationErrorException("Transaction with '{0}' ID does not exist.", id);
 
             return transaction;
-        }
-
-        private IQueryable<Transaction> ApplyDateCondition(IQueryable<Transaction> query, DateTime? from, DateTime? to)
-        {
-            Checker.ArgumentIsNull(query, "query");
-
-            if (!from.HasValue && !to.HasValue)
-            {
-                var firstDayOfCurrentMonth = Time.FirstDayOfCurrentMonth;
-                return query.Where(t => t.Date >= firstDayOfCurrentMonth);
-            }
-
-            if (from.HasValue)
-                query = query.Where(t => t.Date >= from.Value);
-            
-            if (to.HasValue)
-                query = query.Where(t => t.Date <= to.Value);
-
-            return query;
         }
 
         #endregion

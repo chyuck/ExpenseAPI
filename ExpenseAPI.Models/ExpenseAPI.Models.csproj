@@ -53,6 +53,8 @@
     <Compile Include="Common\Error.cs" />
     <Compile Include="Common\Information.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Summary\CategorySummary.cs" />
+    <Compile Include="Summary\Summary.cs" />
     <Compile Include="Transaction\TransactionGet.cs" />
     <Compile Include="Transaction\TransactionPost.cs" />
     <Compile Include="Transaction\TransactionPut.cs" />
