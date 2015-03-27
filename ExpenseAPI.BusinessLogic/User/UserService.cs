@@ -77,7 +77,7 @@ namespace ExpenseAPI.BusinessLogic
                 throw new ArgumentException("User name must have 1-20 characters.", "name");
         }
 
-        public IDisposable LogIn(string name)
+        public IDisposable LogIn(string name, bool createUserNotExist)
         {
             ValidateUserName(name);
 
@@ -90,8 +90,21 @@ namespace ExpenseAPI.BusinessLogic
                 {
                     var user = persistence.GetEntitySet<User>().SingleOrDefault(u => u.Name == name);
                     if (user == null)
-                        throw new UserServiceException("User '{0}' does not exist.", name);
+                    {
+                        if (!createUserNotExist)
+                            throw new UserServiceException("User '{0}' does not exist.", name);
 
+                        user =
+                            new User
+                            {
+                                Name = name,
+                                CreateDate = Time.UtcNow
+                            };
+
+                        persistence.GetEntitySet<User>().Add(user);
+                        persistence.SaveChanges();
+                    }
+                    
                     _user = user;
                 }
 
@@ -135,7 +148,7 @@ namespace ExpenseAPI.BusinessLogic
                     }
                 });
         }
-
+        
         public void Dispose()
         {
             lock (_syncRoot)

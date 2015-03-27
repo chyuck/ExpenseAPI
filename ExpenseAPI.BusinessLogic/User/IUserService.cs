@@ -9,7 +9,7 @@ namespace ExpenseAPI.BusinessLogic
     {
         /// <summary>Logs in user</summary>
         /// <returns>Object that must be disposed on log out</returns>
-        IDisposable LogIn(string name);
+        IDisposable LogIn(string name, bool createUserNotExist);
 
         /// <summary>Returns whether user is logged in</summary>
         bool IsLoggedIn { get; }

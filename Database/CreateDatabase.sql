@@ -27,7 +27,7 @@ GO
 CREATE TABLE [dbo].[User]
 (
 	[UserId] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [nvarchar](20) NOT NULL,
+	[Name] [nvarchar](100) NOT NULL,
 	[CreateDate] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED ([UserId]),
  CONSTRAINT [UK_User] UNIQUE NONCLUSTERED ([Name])

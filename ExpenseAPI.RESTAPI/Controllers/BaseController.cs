@@ -8,6 +8,7 @@ using DIContainer;
 using ExpenseAPI.BusinessLogic;
 using ExpenseAPI.Common.Helpers;
 using ExpenseAPI.Models;
+using Microsoft.WindowsAzure.Mobile.Service.Security;
 using Validator;
 
 namespace ExpenseAPI.RESTAPI.Controllers
@@ -27,9 +28,13 @@ namespace ExpenseAPI.RESTAPI.Controllers
 
             try
             {
+                var serviceUser = User as ServiceUser;
+                if (serviceUser == null)
+                    return Request.CreateResponse(HttpStatusCode.Unauthorized, "User is not authorized.");
+                
                 var userService = Container.Get<IUserService>();
 
-                using (userService.LogIn(UserName))
+                using (userService.LogIn(serviceUser.Id, true))
                 {
                     var response = await action();
 
@@ -57,11 +62,6 @@ namespace ExpenseAPI.RESTAPI.Controllers
 
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, error);
             }
-        }
-
-        protected string UserName
-        {
-            get { return "chyuck"; }
         }
     }
 }
