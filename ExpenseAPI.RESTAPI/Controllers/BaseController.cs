@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using DIContainer;
@@ -58,10 +59,27 @@ namespace ExpenseAPI.RESTAPI.Controllers
             }
             catch (Exception ex)
             {
-                var error = new Error { Message = ex.Message };
+                var error = new Error { Message = CreateErrorMessage(ex) };
 
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, error);
             }
+        }
+
+        protected string CreateErrorMessage(Exception exception)
+        {
+            Checker.ArgumentIsNull(exception, "exception");
+
+            var messageBuilder = new StringBuilder(exception.Message);
+
+            var ex = exception;
+
+            while (ex.InnerException != null)
+            {
+                messageBuilder.AppendLine(ex.InnerException.Message);
+                ex = ex.InnerException;
+            }
+
+            return messageBuilder.ToString();
         }
     }
 }

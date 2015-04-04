@@ -1,7 +1,10 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using ExpenseAPI.BusinessLogic;
+using ExpenseAPI.Models;
 using Microsoft.WindowsAzure.Mobile.Service.Security;
 
 namespace ExpenseAPI.RESTAPI.Controllers
@@ -14,12 +17,20 @@ namespace ExpenseAPI.RESTAPI.Controllers
         [Route("")]
         public async Task<HttpResponseMessage> GetUsersAsync()
         {
-            return await ExecuteAsync(async () =>
+            try
             {
                 var userService = Container.Get<IUserService>();
 
-                return await userService.GetUsersAsync();
-            });
+                var response = await userService.GetUsersAsync();
+
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+            catch (Exception ex)
+            {
+                var error = new Error { Message = CreateErrorMessage(ex) };
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, error);
+            }
         }
     }
 }
