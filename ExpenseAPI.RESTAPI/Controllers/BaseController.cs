@@ -30,7 +30,7 @@ namespace ExpenseAPI.RESTAPI.Controllers
             try
             {
                 var serviceUser = User as ServiceUser;
-                if (serviceUser == null)
+                if (serviceUser == null || string.IsNullOrWhiteSpace(serviceUser.Id))
                     return Request.CreateResponse(HttpStatusCode.Unauthorized, "User is not authorized.");
                 
                 var userService = Container.Get<IUserService>();

@@ -73,8 +73,8 @@ namespace ExpenseAPI.BusinessLogic
 
         private static void ValidateUserName(string name)
         {
-            if (!StringValidator.ValidateString(name, 1, 20, false, false))
-                throw new ArgumentException("User name must have 1-20 characters.", "name");
+            if (!StringValidator.ValidateString(name, 1, 50, false, false))
+                throw new ArgumentException("User name must have 1-50 characters.", "name");
         }
 
         public IDisposable LogIn(string name, bool createUserNotExist)
